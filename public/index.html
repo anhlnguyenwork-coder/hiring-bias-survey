@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Candidate Evaluation Survey</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #f9f9f8;
+      --surface: #ffffff;
+      --surface-alt: #f3f3f1;
+      --border: #e4e4e0;
+      --border-strong: #c8c8c4;
+      --text: #1a1a18;
+      --text-2: #555551;
+      --text-3: #909088;
+      --accent: #1a56db;
+      --accent-bg: #eff4ff;
+      --accent-border: #a4c0f4;
+      --success-bg: #ecfdf5;
+      --success-text: #065f46;
+      --warning-bg: #fffbeb;
+      --warning-text: #92400e;
+      --radius: 8px;
+      --radius-lg: 12px;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    /* ── Layout ── */
+    .shell {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 0 1.25rem 4rem;
+    }
+
+    header {
+      border-bottom: 1px solid var(--border);
+      padding: 1.1rem 0;
+      margin-bottom: 2rem;
+    }
+
+    .header-inner {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 0 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo { font-size: 14px; font-weight: 600; color: var(--text); letter-spacing: -0.01em; }
+    .logo span { color: var(--accent); }
+
+    /* ── Progress ── */
+    .progress-wrap { margin-bottom: 1.75rem; }
+    .progress-meta { display: flex; justify-content: space-between; font-size: 13px; color: var(--text-3); margin-bottom: 6px; }
+    .progress-bar { height: 3px; background: var(--border); border-radius: 99px; }
+    .progress-fill { height: 100%; background: var(--accent); border-radius: 99px; transition: width 0.35s ease; }
+
+    /* ── Intro screen ── */
+    .intro { max-width: 600px; margin: 3rem auto; }
+    .intro h1 { font-size: 26px; font-weight: 600; letter-spacing: -0.02em; margin-bottom: 0.75rem; line-height: 1.3; }
+    .intro p { color: var(--text-2); margin-bottom: 1rem; }
+    .intro ul { color: var(--text-2); padding-left: 1.25rem; margin-bottom: 1.5rem; }
+    .intro ul li { margin-bottom: 0.4rem; }
+    .notice-box {
+      background: var(--accent-bg);
+      border: 1px solid var(--accent-border);
+      border-radius: var(--radius);
+      padding: 0.85rem 1rem;
+      font-size: 13px;
+      color: #1e3a8a;
+      margin-bottom: 1.75rem;
+      display: flex;
+      gap: 8px;
+      align-items: flex-start;
+    }
+
+    /* ── Buttons ── */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 10px 20px;
+      border-radius: var(--radius);
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: background 0.15s, border-color 0.15s, opacity 0.15s;
+      font-family: inherit;
+      text-decoration: none;
+    }
+    .btn-primary { background: var(--accent); color: #fff; }
+    .btn-primary:hover { background: #1648c8; }
+    .btn-secondary { background: var(--surface); color: var(--text); border-color: var(--border-strong); }
+    .btn-secondary:hover { background: var(--surface-alt); }
+    .btn:disabled { opacity: 0.4; pointer-events: none; }
+    .btn-row { display: flex; align-items: center; justify-content: space-between; margin-top: 2rem; padding-top: 1.25rem; border-top: 1px solid var(--border); }
+    .btn-row-center { text-align: center; }
+
+    /* ── Pair header ── */
+    .pair-header { margin-bottom: 1.25rem; }
+    .pair-eyebrow { font-size: 12px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-3); margin-bottom: 4px; }
+    .pair-title { font-size: 19px; font-weight: 600; letter-spacing: -0.01em; margin-bottom: 4px; }
+    .pair-sub { font-size: 14px; color: var(--text-2); }
+
+    .info-banner {
+      background: var(--surface-alt);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 10px 14px;
+      font-size: 13px;
+      color: var(--text-2);
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      margin-bottom: 1.25rem;
+    }
+
+    /* ── Candidate cards ── */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 2rem;
+    }
+
+    @media (max-width: 600px) {
+      .cards-grid { grid-template-columns: 1fr; }
+    }
+
+    .cand-card {
+      background: var(--surface);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 1.1rem 1.2rem;
+      cursor: pointer;
+      transition: border-color 0.15s;
+      user-select: none;
+    }
+    .cand-card:hover { border-color: var(--border-strong); }
+    .cand-card.selected { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-bg); }
+
+    .cand-name { font-size: 16px; font-weight: 600; letter-spacing: -0.01em; margin-bottom: 1px; }
+    .cand-role { font-size: 12px; color: var(--text-3); margin-bottom: 12px; }
+
+    .card-divider { height: 1px; background: var(--border); margin: 10px 0; }
+
+    .field-label {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: var(--text-3);
+      margin-bottom: 4px;
+      margin-top: 10px;
+    }
+    .field-val { font-size: 13px; font-weight: 500; color: var(--text); line-height: 1.4; margin-bottom: 3px; }
+    .field-sub { font-size: 12px; color: var(--text-2); line-height: 1.5; margin-bottom: 6px; }
+
+    .badges { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px; margin-bottom: 2px; }
+    .badge {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 500;
+      padding: 2px 8px;
+      border-radius: 4px;
+    }
+    .badge-gpa { background: var(--success-bg); color: var(--success-text); }
+    .badge-visa { background: var(--warning-bg); color: var(--warning-text); }
+
+    .cover-text {
+      font-size: 12px;
+      line-height: 1.65;
+      color: var(--text-2);
+      font-style: italic;
+    }
+
+    /* ── Questions ── */
+    .question-block { margin-bottom: 1.75rem; }
+    .q-label { font-size: 15px; font-weight: 600; margin-bottom: 0.6rem; }
+    .q-hint { font-size: 12px; color: var(--text-3); margin-bottom: 0.85rem; }
+
+    .choice-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .choice-btn {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      background: var(--surface);
+      border: 1.5px solid var(--border-strong);
+      border-radius: var(--radius);
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-2);
+      cursor: pointer;
+      transition: background 0.12s, border-color 0.12s, color 0.12s;
+      font-family: inherit;
+      text-align: left;
+    }
+    .choice-btn:hover { background: var(--surface-alt); }
+    .choice-btn.selected {
+      border-color: var(--accent);
+      background: var(--accent-bg);
+      color: var(--accent);
+    }
+    .radio-dot {
+      width: 16px; height: 16px;
+      border-radius: 50%;
+      border: 1.5px solid currentColor;
+      flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .choice-btn.selected .radio-dot::after {
+      content: '';
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--accent);
+      display: block;
+    }
+
+    /* ── Rating ── */
+    .rating-block { margin-bottom: 10px; }
+    .rating-row { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+    .rating-name { font-size: 13px; color: var(--text-2); width: 130px; flex-shrink: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .rating-btns { display: flex; gap: 4px; }
+    .rating-btn {
+      width: 34px; height: 34px;
+      border-radius: 50%;
+      border: 1.5px solid var(--border-strong);
+      background: var(--surface);
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-2);
+      cursor: pointer;
+      font-family: inherit;
+      transition: background 0.12s;
+    }
+    .rating-btn:hover { background: var(--surface-alt); }
+    .rating-btn.selected { background: var(--text); color: #fff; border-color: var(--text); }
+    .rating-scale-labels {
+      font-size: 11px;
+      color: var(--text-3);
+      display: flex;
+      justify-content: space-between;
+      margin-left: 138px;
+      width: calc(7 * 34px + 6 * 4px);
+    }
+
+    /* ── Done screen ── */
+    .done-screen { max-width: 540px; margin: 3rem auto; text-align: center; }
+    .done-icon { font-size: 48px; margin-bottom: 1rem; }
+    .done-title { font-size: 24px; font-weight: 600; letter-spacing: -0.02em; margin-bottom: 8px; }
+    .done-sub { color: var(--text-2); margin-bottom: 2rem; }
+    .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 2rem; text-align: left; }
+    .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem; }
+    .stat-label { font-size: 12px; color: var(--text-3); margin-bottom: 4px; }
+    .stat-val { font-size: 22px; font-weight: 600; letter-spacing: -0.02em; }
+    .done-actions { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+
+    /* ── Submitting state ── */
+    .submitting-overlay { display: none; }
+    .error-msg { background: #fef2f2; border: 1px solid #fecaca; color: #991b1b; border-radius: var(--radius); padding: 10px 14px; font-size: 13px; margin-top: 10px; display: none; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <span class="logo">Hiring<span>Study</span></span>
+    <span id="header-progress" style="font-size:13px; color:var(--text-3);"></span>
+  </div>
+</header>
+
+<div class="shell">
+  <div id="app"></div>
+</div>
+
+<script>
+const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbwT0S9kZFVYHzo9iJ_lOxvOfwzBFi3OCXjQmub5_f7xuaYJM_Bqc8O41-gB73FoHeRH/exec';
+
+const PAIRS = [
+  {
+    role: "High School Math Teacher",
+    institution: "Westfield Unified School District",
+    left: {
+      name: "Emily Carter",
+      subtitle: "Math Teacher Candidate",
+      edu: "University of Illinois Urbana-Champaign — B.S. Mathematics Education, 2021",
+      cert: "Illinois Professional Educator License (PEL), Secondary Mathematics",
+      gpa: "3.6",
+      visa: false,
+      exp: [
+        { title: "Student Teacher — Lincoln High School, Springfield, IL (Spring 2021)", desc: "Taught Algebra II and Pre-Calculus to 11th and 12th graders. Developed differentiated lesson plans for mixed-ability classes." },
+        { title: "Math Tutor — University of Illinois Learning Center (2019–2021)", desc: "One-on-one support for undergraduates in Calculus I and II. Maintained 4.8/5 student satisfaction rating." }
+      ],
+      cover: "\"I've wanted to teach math since high school, where a great teacher turned a subject I dreaded into one I loved. My student teaching experience at Lincoln gave me a real sense of what it takes to reach students who think they're 'just not math people.' I'm excited about the opportunity to build that same kind of classroom at Westfield.\""
+    },
+    right: {
+      name: "Ji-Woo Han",
+      subtitle: "Math Teacher Candidate",
+      edu: "Seoul National University — B.S. Mathematics, 2020 | M.Ed. Mathematics Education, University of Illinois, 2022",
+      cert: "Illinois Professional Educator License (PEL), Secondary Mathematics",
+      gpa: "3.6",
+      visa: true,
+      exp: [
+        { title: "Student Teacher — Jefferson Middle School, Champaign, IL (Spring 2022)", desc: "Taught 8th-grade Algebra and Geometry. Designed project-based units that increased average quiz scores by 14%." },
+        { title: "Mathematics Instructor — Gangnam Education Center, Seoul (2018–2020)", desc: "College-prep math instruction for students preparing for Korea's national university entrance exam." }
+      ],
+      cover: "\"My background spans two educational systems, which has given me a nuanced understanding of how students build mathematical reasoning under different instructional models. During my M.Ed. practicum at Jefferson Middle School, I developed inquiry-based units that produced measurable gains in student performance. I am committed to bringing that same rigor and creativity to Westfield's students.\""
+    }
+  },
+  {
+    role: "Academic Advisor",
+    institution: "Greendale Community College",
+    left: {
+      name: "Marcus Webb",
+      subtitle: "Academic Advisor Candidate",
+      edu: "Indiana University — B.A. Psychology, 2019 | M.S. Higher Education Student Affairs, 2021",
+      cert: "NACADA member since 2021",
+      gpa: "3.5",
+      visa: false,
+      exp: [
+        { title: "Graduate Advisor — IU Office of Student Success (2021–2023)", desc: "Managed a caseload of 180 first-generation students. Developed a peer mentoring program that improved semester-to-semester retention by 9%." },
+        { title: "Resident Advisor — IU Housing (2017–2019)", desc: "Supported a 45-student floor, facilitated community programming, and mediated conflict resolution." }
+      ],
+      cover: "\"I got into advising because I was a first-gen student myself and didn't have anyone to tell me how college worked. The advisors who made time for me changed my trajectory, and I've spent the past few years trying to be that person for students at IU. Greendale's focus on transfer pathways and workforce readiness is exactly the kind of mission I want to grow in.\""
+    },
+    right: {
+      name: "Mei-Ling Zhou",
+      subtitle: "Academic Advisor Candidate",
+      edu: "Fudan University — B.A. Education, 2018 | M.S. Higher Education Administration, Ohio State University, 2021",
+      cert: "NACADA member since 2021",
+      gpa: "3.5",
+      visa: true,
+      exp: [
+        { title: "Academic Advisor — Ohio State University First-Year Experience (2021–2023)", desc: "Advised 200 students on course selection, degree planning, and academic recovery. Led outreach for students on academic probation." },
+        { title: "International Student Mentor — OSU Global Gateway (2020–2021)", desc: "Supported newly arrived international students in academic and cultural transition. Led workshops on U.S. academic norms and campus resources." }
+      ],
+      cover: "\"My advising experience at Ohio State spans both first-year domestic students and newly arrived international students, which has deepened my ability to meet students where they are — academically and personally. I am skilled at navigating complex degree requirements, building trust with underserved populations, and designing proactive outreach strategies. I would bring that same student-centered commitment to Greendale.\""
+    }
+  },
+  {
+    role: "Curriculum Developer",
+    institution: "Riverbend K-12 School District",
+    left: {
+      name: "Brittany Hughes",
+      subtitle: "Curriculum Developer Candidate",
+      edu: "University of Michigan — B.S. Elementary Education, 2018 | M.Ed. Curriculum and Instruction, 2020",
+      cert: "Michigan Teaching Certificate, Elementary (K–8)",
+      gpa: "3.7",
+      visa: false,
+      exp: [
+        { title: "3rd Grade Teacher — Ann Arbor Public Schools (2020–2023)", desc: "Designed and piloted a literacy intervention curriculum adopted district-wide in 2022. Collaborated with curriculum coaches on scope-and-sequence alignment." },
+        { title: "Curriculum Writing Fellow — Michigan Dept. of Education (Summer 2021)", desc: "Contributed to the revision of Michigan's K–5 ELA standards framework. Reviewed and aligned instructional materials across 6 districts." }
+      ],
+      cover: "\"Three years in the classroom taught me that the gap between a written curriculum and what actually works for kids is enormous — and I became obsessed with closing it. The literacy intervention I built at Ann Arbor started as a pilot for 12 students and ended up being used district-wide. I want to bring that classroom-grounded perspective to Riverbend's curriculum team.\""
+    },
+    right: {
+      name: "Anika Patel",
+      subtitle: "Curriculum Developer Candidate",
+      edu: "University of Delhi — B.Ed. Primary Education, 2017 | M.Ed. Curriculum Studies, University of Michigan, 2020",
+      cert: "Michigan Teaching Certificate, Elementary (K–8)",
+      gpa: "3.7",
+      visa: true,
+      exp: [
+        { title: "Curriculum Specialist — Detroit Public Schools Community District (2020–2023)", desc: "Led redesign of the district's K–5 science curriculum aligned to NGSS. Facilitated professional development for 40+ teachers." },
+        { title: "Curriculum Consultant — UNICEF Education Program, New Delhi (2018–2019)", desc: "Developed foundational literacy materials for low-resource primary schools across three Indian states. Adapted materials for multilingual learners." }
+      ],
+      cover: "\"My curriculum work spans high-need urban districts in the United States and multilingual learning environments internationally, giving me a broad lens on how instructional design must adapt to context. At Detroit Public Schools, I led a NGSS-aligned science curriculum overhaul and trained over 40 teachers on implementation. I am excited to bring that systems-level thinking and equity focus to Riverbend.\""
+    }
+  },
+  {
+    role: "University Admissions Counselor",
+    institution: "Harwood University",
+    left: {
+      name: "Jake Morrison",
+      subtitle: "Admissions Counselor Candidate",
+      edu: "Purdue University — B.A. Communication, 2020",
+      cert: "NACAC member since 2020",
+      gpa: "3.4",
+      visa: false,
+      exp: [
+        { title: "Admissions Counselor — Purdue University Office of Admissions (2020–2023)", desc: "Managed a recruitment territory covering Indiana and Ohio. Reviewed 1,200+ applications per cycle. Conducted info sessions for 500+ prospective students annually." },
+        { title: "Campus Ambassador and Tour Guide — Purdue (2018–2020)", desc: "Led campus tours and represented Purdue at 15+ college fairs across the Midwest." }
+      ],
+      cover: "\"I found my way into admissions almost by accident — I loved giving tours in undergrad and realized I was good at helping families figure out if a school was right for them. Three years into the role at Purdue, I still get excited walking into a high school and talking with students who have no idea what college will open up for them. I'd love to bring that energy to Harwood.\""
+    },
+    right: {
+      name: "Yara Mansour",
+      subtitle: "Admissions Counselor Candidate",
+      edu: "American University of Beirut — B.A. Political Science, 2019 | Graduate Certificate, Higher Education Management, Georgetown University, 2021",
+      cert: "NACAC member since 2021",
+      gpa: "3.4",
+      visa: true,
+      exp: [
+        { title: "Admissions Counselor — Georgetown University Undergraduate Admissions (2021–2023)", desc: "Managed international recruitment territory spanning the Middle East and North Africa. Evaluated 900+ applications per cycle with a focus on international student readiness." },
+        { title: "International Student Recruiter — AUB Enrollment Office (2019–2020)", desc: "Represented AUB at college fairs across Lebanon, Jordan, and the UAE. Coordinated scholarship communication for admitted students." }
+      ],
+      cover: "\"My admissions experience at Georgetown has been centered on international recruitment — building relationships with school counselors across the MENA region, evaluating applicants from diverse educational systems, and helping students navigate the complexity of applying to a U.S. university from abroad. I bring a global recruitment perspective that I believe would strengthen Harwood's enrollment strategy and international student pipeline.\""
+    }
+  }
+];
+
+let screen = 'intro';
+let current = 0;
+let responses = PAIRS.map(() => ({ q1: null, q2L: null, q2R: null }));
+let respondentId = 'r_' + Date.now() + '_' + Math.random().toString(36).slice(2,7);
+let startTime = Date.now();
+
+const app = document.getElementById('app');
+const headerProgress = document.getElementById('header-progress');
+
+function render() {
+  if (screen === 'intro') renderIntro();
+  else if (screen === 'survey') renderPair(current);
+  else if (screen === 'done') renderDone();
+}
+
+function renderIntro() {
+  headerProgress.textContent = '';
+  app.innerHTML = `
+    <div class="intro">
+      <h1>Candidate Evaluation Study</h1>
+      <p>You'll review <strong>4 pairs of candidates</strong> applying for education-sector positions. For each pair, read both profiles carefully and answer two questions.</p>
+      <ul>
+        <li>This survey takes about <strong>5–8 minutes</strong> to complete.</li>
+        <li>There are no right or wrong answers — we're interested in your genuine impressions.</li>
+        <li>Your responses are anonymous and used only for research purposes.</li>
+      </ul>
+      <div class="notice-box">
+        &#9432;&nbsp; For each pair, both candidates are applying for the same role. Treat each decision as you would a real screening decision.
+      </div>
+      <button class="btn btn-primary" onclick="startSurvey()">Start the survey &rarr;</button>
+    </div>`;
+}
+
+function startSurvey() {
+  screen = 'survey';
+  current = 0;
+  render();
+}
+
+function renderPair(idx) {
+  const p = PAIRS[idx];
+  const r = responses[idx];
+  const pct = Math.round((idx / PAIRS.length) * 100);
+  headerProgress.textContent = `${idx + 1} of ${PAIRS.length}`;
+
+  app.innerHTML = `
+    <div class="progress-wrap">
+      <div class="progress-meta">
+        <span style="text-transform:uppercase;letter-spacing:0.05em;">Pair ${idx+1} of ${PAIRS.length}</span>
+        <span>${pct}% complete</span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
+    </div>
+
+    <div class="pair-header">
+      <p class="pair-eyebrow">Position</p>
+      <h2 class="pair-title">${p.role}</h2>
+      <p class="pair-sub">${p.institution}</p>
+    </div>
+
+    <div class="info-banner">
+      &#9432;&nbsp; Both candidates are applying for the same role. Take your time — this decision is incentivized.
+    </div>
+
+    <div class="cards-grid">
+      ${candidateCard(p.left, 'left', r.q1 === 'left')}
+      ${candidateCard(p.right, 'right', r.q1 === 'right')}
+    </div>
+
+    <div class="question-block">
+      <p class="q-label">Q1. Which candidate would you advance to a phone screen?</p>
+      <div class="choice-row">
+        <button class="choice-btn ${r.q1==='left'?'selected':''}" onclick="selectQ1('left')">
+          <span class="radio-dot"></span>${p.left.name}
+        </button>
+        <button class="choice-btn ${r.q1==='right'?'selected':''}" onclick="selectQ1('right')">
+          <span class="radio-dot"></span>${p.right.name}
+        </button>
+      </div>
+    </div>
+
+    <div class="question-block">
+      <p class="q-label">Q2. Rate the hireability of each candidate</p>
+      <p class="q-hint">1 = Definitely would not advance &nbsp;&middot;&nbsp; 7 = Definitely would advance</p>
+      <div class="rating-block">
+        ${ratingRow(p.left.name, 'left', r.q2L)}
+        ${ratingRow(p.right.name, 'right', r.q2R)}
+        <div class="rating-scale-labels"><span>1 — Would not advance</span><span>7 — Would advance</span></div>
+      </div>
+    </div>
+
+    <div id="submit-error" class="error-msg"></div>
+
+    <div class="btn-row">
+      <button class="btn btn-secondary" onclick="navigate(-1)" ${idx===0?'disabled':''}>
+        &larr; Previous
+      </button>
+      <span style="font-size:13px;color:var(--text-3);">${idx+1} of ${PAIRS.length} complete</span>
+      <button class="btn btn-primary" id="next-btn" onclick="navigate(1)">
+        ${idx === PAIRS.length - 1 ? 'Submit &rarr;' : 'Next pair &rarr;'}
+      </button>
+    </div>`;
+}
+
+function candidateCard(c, side, selected) {
+  const expHtml = c.exp.map(e => `
+    <p class="field-val">${e.title}</p>
+    <p class="field-sub">${e.desc}</p>
+  `).join('');
+
+  return `<div class="cand-card ${selected?'selected':''}" onclick="selectQ1('${side}')">
+    <p class="cand-name">${c.name}</p>
+    <p class="cand-role">${c.subtitle}</p>
+    <div class="card-divider"></div>
+    <p class="field-label">Education</p>
+    <p class="field-val">${c.edu}</p>
+    <div class="badges">
+      <span class="badge badge-gpa">GPA ${c.gpa}</span>
+      ${c.visa ? '<span class="badge badge-visa">Visa sponsorship required</span>' : ''}
+    </div>
+    <p class="field-label">Certification</p>
+    <p class="field-sub">${c.cert}</p>
+    <p class="field-label">Experience</p>
+    ${expHtml}
+    <div class="card-divider"></div>
+    <p class="field-label">Cover letter excerpt</p>
+    <p class="cover-text">${c.cover}</p>
+  </div>`;
+}
+
+function ratingRow(name, side, val) {
+  let btns = '';
+  for (let i = 1; i <= 7; i++) {
+    btns += `<button class="rating-btn ${val===i?'selected':''}" onclick="selectRating('${side}',${i})">${i}</button>`;
+  }
+  return `<div class="rating-row">
+    <span class="rating-name" title="${name}">${name}</span>
+    <div class="rating-btns">${btns}</div>
+  </div>`;
+}
+
+function selectQ1(side) {
+  responses[current].q1 = side;
+  renderPair(current);
+}
+
+function selectRating(side, val) {
+  if (side === 'left') responses[current].q2L = val;
+  else responses[current].q2R = val;
+  renderPair(current);
+}
+
+function navigate(dir) {
+  if (dir === 1 && current === PAIRS.length - 1) {
+    submitSurvey();
+    return;
+  }
+  current = Math.max(0, Math.min(PAIRS.length - 1, current + dir));
+  renderPair(current);
+}
+
+async function submitSurvey() {
+  const nextBtn = document.getElementById('next-btn');
+  const errEl = document.getElementById('submit-error');
+  if (nextBtn) { nextBtn.disabled = true; nextBtn.textContent = 'Submitting…'; }
+
+  const payload = {
+    respondent_id: respondentId,
+    submitted_at: new Date().toISOString(),
+    duration_seconds: Math.round((Date.now() - startTime) / 1000),
+    responses: PAIRS.map((p, i) => ({
+      pair: i + 1,
+      role: p.role,
+      institution: p.institution,
+      domestic_candidate: p.left.name,
+      international_candidate: p.right.name,
+      q1_advanced: responses[i].q1 === 'left' ? p.left.name : responses[i].q1 === 'right' ? p.right.name : null,
+      q1_advanced_group: responses[i].q1 === 'left' ? 'domestic' : responses[i].q1 === 'right' ? 'international' : null,
+      q2_domestic_rating: responses[i].q2L,
+      q2_international_rating: responses[i].q2R
+    }))
+  };
+
+  try {
+    await fetch(SHEETS_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+  } catch (e) {
+    console.warn('Submission error (responses still shown locally):', e);
+  }
+
+  screen = 'done';
+  render();
+}
+
+function renderDone() {
+  headerProgress.textContent = 'Complete';
+  const domAdv = responses.filter(r => r.q1 === 'left').length;
+  const intlAdv = responses.filter(r => r.q1 === 'right').length;
+  const domRatings = responses.map(r => r.q2L).filter(Boolean);
+  const intlRatings = responses.map(r => r.q2R).filter(Boolean);
+  const avgDom = domRatings.length ? (domRatings.reduce((a,b)=>a+b,0)/domRatings.length).toFixed(1) : '—';
+  const avgIntl = intlRatings.length ? (intlRatings.reduce((a,b)=>a+b,0)/intlRatings.length).toFixed(1) : '—';
+
+  app.innerHTML = `<div class="done-screen">
+    <div class="done-icon">&#10003;</div>
+    <h2 class="done-title">Thank you!</h2>
+    <p class="done-sub">Your responses have been recorded. Here's a quick summary of your decisions across the 4 pairs.</p>
+    <div class="stats-grid">
+      <div class="stat-card"><p class="stat-label">Domestic candidates advanced</p><p class="stat-val">${domAdv} / ${PAIRS.length}</p></div>
+      <div class="stat-card"><p class="stat-label">International candidates advanced</p><p class="stat-val">${intlAdv} / ${PAIRS.length}</p></div>
+      <div class="stat-card"><p class="stat-label">Avg. domestic rating</p><p class="stat-val">${avgDom} / 7</p></div>
+      <div class="stat-card"><p class="stat-label">Avg. international rating</p><p class="stat-val">${avgIntl} / 7</p></div>
+    </div>
+    <div class="done-actions">
+      <button class="btn btn-secondary" onclick="restartSurvey()">&#8635; Take it again</button>
+    </div>
+  </div>`;
+}
+
+function restartSurvey() {
+  responses = PAIRS.map(() => ({ q1: null, q2L: null, q2R: null }));
+  respondentId = 'r_' + Date.now() + '_' + Math.random().toString(36).slice(2,7);
+  startTime = Date.now();
+  current = 0;
+  screen = 'intro';
+  render();
+}
+
+render();
+</script>
+</body>
+</html>
