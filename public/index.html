@@ -8,272 +8,99 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     :root {
-      --bg: #f9f9f8;
-      --surface: #ffffff;
-      --surface-alt: #f3f3f1;
-      --border: #e4e4e0;
-      --border-strong: #c8c8c4;
-      --text: #1a1a18;
-      --text-2: #555551;
-      --text-3: #909088;
-      --accent: #1a56db;
-      --accent-bg: #eff4ff;
-      --accent-border: #a4c0f4;
-      --success-bg: #ecfdf5;
-      --success-text: #065f46;
-      --warning-bg: #fffbeb;
-      --warning-text: #92400e;
-      --radius: 8px;
-      --radius-lg: 12px;
+      --bg:#f8f9fa; --surface:#ffffff; --surface-alt:#f3f4f6;
+      --border:#e5e7eb; --border-strong:#d1d5db;
+      --text:#111827; --text-2:#4b5563; --text-3:#9ca3af;
+      --accent:#1d4ed8; --accent-bg:#eff6ff; --accent-border:#bfdbfe;
+      --green:#065f46; --green-bg:#ecfdf5;
+      --warn:#92400e; --warn-bg:#fffbeb;
+      --radius:8px; --radius-lg:12px;
     }
+    body { font-family:'Inter',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; font-size:15px; line-height:1.6; }
+    header { border-bottom:1px solid var(--border); background:var(--surface); }
+    .header-inner { max-width:760px; margin:0 auto; padding:0.9rem 1.25rem; display:flex; align-items:center; justify-content:space-between; }
+    .logo { font-size:14px; font-weight:600; } .logo span { color:var(--accent); }
+    .progress-wrap { max-width:760px; margin:0 auto; padding:1rem 1.25rem 0; }
+    .progress-meta { display:flex; justify-content:space-between; font-size:12px; color:var(--text-3); margin-bottom:5px; }
+    .progress-bar { height:3px; background:var(--border); border-radius:99px; }
+    .progress-fill { height:100%; background:var(--accent); border-radius:99px; transition:width 0.4s ease; }
+    .shell { max-width:760px; margin:0 auto; padding:1.5rem 1.25rem 5rem; }
+    .screen { display:none; } .screen.active { display:block; }
 
-    body {
-      font-family: 'Inter', sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-      font-size: 15px;
-      line-height: 1.6;
-    }
+    .intro-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-lg); padding:2rem; max-width:600px; }
+    .intro-card h1 { font-size:22px; font-weight:600; letter-spacing:-0.02em; margin-bottom:0.75rem; }
+    .intro-card p { color:var(--text-2); margin-bottom:0.85rem; font-size:14px; }
+    .intro-card ul { color:var(--text-2); font-size:14px; padding-left:1.25rem; margin-bottom:1.25rem; }
+    .intro-card ul li { margin-bottom:0.35rem; }
+    .notice { background:var(--accent-bg); border:1px solid var(--accent-border); border-radius:var(--radius); padding:0.8rem 1rem; font-size:13px; color:#1e40af; margin-bottom:1.5rem; }
 
-    /* ── Layout ── */
-    .shell {
-      max-width: 860px;
-      margin: 0 auto;
-      padding: 0 1.25rem 4rem;
-    }
+    .eyebrow { font-size:11px; font-weight:600; letter-spacing:0.07em; text-transform:uppercase; color:var(--text-3); margin-bottom:4px; }
+    .screen-title { font-size:19px; font-weight:600; letter-spacing:-0.01em; margin-bottom:4px; }
+    .screen-sub { font-size:13px; color:var(--text-2); margin-bottom:1.25rem; }
+    .cred-notice { background:var(--surface-alt); border:1px solid var(--border); border-radius:var(--radius); padding:0.75rem 1rem; font-size:13px; color:var(--text-2); margin-bottom:1.25rem; }
 
-    header {
-      border-bottom: 1px solid var(--border);
-      padding: 1.1rem 0;
-      margin-bottom: 2rem;
-    }
+    .cred-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-lg); overflow:hidden; margin-bottom:1.25rem; }
+    .cred-card-header { background:var(--surface-alt); border-bottom:1px solid var(--border); padding:0.85rem 1.1rem; }
+    .cand-name { font-size:17px; font-weight:600; }
+    .cand-subrole { font-size:12px; color:var(--text-3); margin-top:2px; }
+    .cred-row { display:flex; border-bottom:1px solid var(--border); }
+    .cred-row:last-child { border-bottom:none; }
+    .cred-lbl { width:130px; flex-shrink:0; padding:10px 14px; font-size:12px; font-weight:600; color:var(--text-2); background:var(--surface-alt); border-right:1px solid var(--border); }
+    .cred-val { padding:10px 14px; font-size:13px; color:var(--text); flex:1; }
+    .badge { display:inline-block; font-size:11px; font-weight:600; padding:2px 8px; border-radius:4px; }
+    .badge-gpa { background:var(--green-bg); color:var(--green); }
+    .badge-visa { background:var(--warn-bg); color:var(--warn); }
 
-    .header-inner {
-      max-width: 860px;
-      margin: 0 auto;
-      padding: 0 1.25rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
+    .q-section { margin-bottom:1.5rem; }
+    .q-label { font-size:15px; font-weight:600; margin-bottom:0.6rem; }
+    .q-hint { font-size:12px; color:var(--text-3); margin-bottom:0.85rem; }
+    .rating-btns { display:flex; gap:5px; }
+    .rating-btn { width:36px; height:36px; border-radius:50%; border:1.5px solid var(--border-strong); background:var(--surface); font-size:13px; font-weight:500; color:var(--text-2); cursor:pointer; font-family:inherit; transition:background 0.1s; display:flex; align-items:center; justify-content:center; }
+    .rating-btn:hover { background:var(--surface-alt); }
+    .rating-btn.selected { background:var(--text); color:#fff; border-color:var(--text); }
+    .rating-scale-labels { display:flex; justify-content:space-between; font-size:11px; color:var(--text-3); margin-top:5px; width:calc(7*36px + 6*5px); }
 
-    .logo { font-size: 14px; font-weight: 600; color: var(--text); letter-spacing: -0.01em; }
-    .logo span { color: var(--accent); }
+    .letter-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-lg); overflow:hidden; margin-bottom:1.5rem; }
+    .letter-card-header { background:var(--surface-alt); border-bottom:1px solid var(--border); padding:0.85rem 1.1rem; }
+    .letter-lbl { font-size:12px; font-weight:600; color:var(--text-2); }
+    .letter-body { padding:1.25rem 1.4rem; }
+    .letter-name { font-size:15px; font-weight:600; }
+    .letter-meta { font-size:12px; color:var(--text-3); margin-top:2px; margin-bottom:1rem; }
+    .letter-salutation { font-size:13px; color:var(--text-3); margin-bottom:0.85rem; }
+    .letter-para { font-size:14px; line-height:1.8; color:var(--text-2); margin-bottom:0.9rem; }
+    .letter-para:last-child { margin-bottom:0; }
 
-    /* ── Progress ── */
-    .progress-wrap { margin-bottom: 1.75rem; }
-    .progress-meta { display: flex; justify-content: space-between; font-size: 13px; color: var(--text-3); margin-bottom: 6px; }
-    .progress-bar { height: 3px; background: var(--border); border-radius: 99px; }
-    .progress-fill { height: 100%; background: var(--accent); border-radius: 99px; transition: width 0.35s ease; }
+    .choice-row { display:grid; grid-template-columns:1fr 1fr; gap:8px; max-width:380px; }
+    .choice-btn { display:flex; align-items:center; gap:10px; padding:10px 14px; background:var(--surface); border:1.5px solid var(--border-strong); border-radius:var(--radius); font-size:13px; font-weight:500; color:var(--text-2); cursor:pointer; font-family:inherit; transition:background 0.1s, border-color 0.1s, color 0.1s; }
+    .choice-btn:hover { background:var(--surface-alt); }
+    .choice-btn.selected { border-color:var(--accent); background:var(--accent-bg); color:var(--accent); }
+    .radio-dot { width:16px; height:16px; border-radius:50%; border:1.5px solid currentColor; flex-shrink:0; display:flex; align-items:center; justify-content:center; }
+    .choice-btn.selected .radio-dot::after { content:\'\'; width:8px; height:8px; border-radius:50%; background:var(--accent); display:block; }
 
-    /* ── Intro screen ── */
-    .intro { max-width: 600px; margin: 3rem auto; }
-    .intro h1 { font-size: 26px; font-weight: 600; letter-spacing: -0.02em; margin-bottom: 0.75rem; line-height: 1.3; }
-    .intro p { color: var(--text-2); margin-bottom: 1rem; }
-    .intro ul { color: var(--text-2); padding-left: 1.25rem; margin-bottom: 1.5rem; }
-    .intro ul li { margin-bottom: 0.4rem; }
-    .notice-box {
-      background: var(--accent-bg);
-      border: 1px solid var(--accent-border);
-      border-radius: var(--radius);
-      padding: 0.85rem 1rem;
-      font-size: 13px;
-      color: #1e3a8a;
-      margin-bottom: 1.75rem;
-      display: flex;
-      gap: 8px;
-      align-items: flex-start;
-    }
+    .pill-row { display:flex; flex-wrap:wrap; gap:6px; }
+    .pill-btn { padding:7px 14px; background:var(--surface); border:1.5px solid var(--border-strong); border-radius:99px; font-size:13px; color:var(--text-2); cursor:pointer; font-family:inherit; transition:background 0.1s, border-color 0.1s; }
+    .pill-btn:hover { background:var(--surface-alt); }
+    .pill-btn.selected { border-color:var(--accent); background:var(--accent-bg); color:var(--accent); font-weight:500; }
 
-    /* ── Buttons ── */
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 10px 20px;
-      border-radius: var(--radius);
-      font-size: 14px;
-      font-weight: 500;
-      cursor: pointer;
-      border: 1px solid transparent;
-      transition: background 0.15s, border-color 0.15s, opacity 0.15s;
-      font-family: inherit;
-      text-decoration: none;
-    }
-    .btn-primary { background: var(--accent); color: #fff; }
-    .btn-primary:hover { background: #1648c8; }
-    .btn-secondary { background: var(--surface); color: var(--text); border-color: var(--border-strong); }
-    .btn-secondary:hover { background: var(--surface-alt); }
-    .btn:disabled { opacity: 0.4; pointer-events: none; }
-    .btn-row { display: flex; align-items: center; justify-content: space-between; margin-top: 2rem; padding-top: 1.25rem; border-top: 1px solid var(--border); }
-    .btn-row-center { text-align: center; }
+    .nav-row { display:flex; align-items:center; justify-content:space-between; margin-top:2rem; padding-top:1.25rem; border-top:1px solid var(--border); }
+    .nav-center { font-size:13px; color:var(--text-3); }
+    .btn { display:inline-flex; align-items:center; gap:6px; padding:10px 20px; border-radius:var(--radius); font-size:14px; font-weight:500; cursor:pointer; border:1px solid transparent; transition:background 0.15s; font-family:inherit; }
+    .btn-primary { background:var(--accent); color:#fff; }
+    .btn-primary:hover { background:#1e40af; }
+    .btn-secondary { background:var(--surface); color:var(--text); border-color:var(--border-strong); }
+    .btn-secondary:hover { background:var(--surface-alt); }
 
-    /* ── Pair header ── */
-    .pair-header { margin-bottom: 1.25rem; }
-    .pair-eyebrow { font-size: 12px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-3); margin-bottom: 4px; }
-    .pair-title { font-size: 19px; font-weight: 600; letter-spacing: -0.01em; margin-bottom: 4px; }
-    .pair-sub { font-size: 14px; color: var(--text-2); }
-
-    .info-banner {
-      background: var(--surface-alt);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 10px 14px;
-      font-size: 13px;
-      color: var(--text-2);
-      display: flex;
-      align-items: flex-start;
-      gap: 8px;
-      margin-bottom: 1.25rem;
-    }
-
-    /* ── Candidate cards ── */
-    .cards-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 14px;
-      margin-bottom: 2rem;
-    }
-
-    @media (max-width: 600px) {
-      .cards-grid { grid-template-columns: 1fr; }
-    }
-
-    .cand-card {
-      background: var(--surface);
-      border: 1.5px solid var(--border);
-      border-radius: var(--radius-lg);
-      padding: 1.1rem 1.2rem;
-      cursor: pointer;
-      transition: border-color 0.15s;
-      user-select: none;
-    }
-    .cand-card:hover { border-color: var(--border-strong); }
-    .cand-card.selected { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-bg); }
-
-    .cand-name { font-size: 16px; font-weight: 600; letter-spacing: -0.01em; margin-bottom: 1px; }
-    .cand-role { font-size: 12px; color: var(--text-3); margin-bottom: 12px; }
-
-    .card-divider { height: 1px; background: var(--border); margin: 10px 0; }
-
-    .field-label {
-      font-size: 10px;
-      font-weight: 600;
-      letter-spacing: 0.07em;
-      text-transform: uppercase;
-      color: var(--text-3);
-      margin-bottom: 4px;
-      margin-top: 10px;
-    }
-    .field-val { font-size: 13px; font-weight: 500; color: var(--text); line-height: 1.4; margin-bottom: 3px; }
-    .field-sub { font-size: 12px; color: var(--text-2); line-height: 1.5; margin-bottom: 6px; }
-
-    .badges { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px; margin-bottom: 2px; }
-    .badge {
-      display: inline-block;
-      font-size: 11px;
-      font-weight: 500;
-      padding: 2px 8px;
-      border-radius: 4px;
-    }
-    .badge-gpa { background: var(--success-bg); color: var(--success-text); }
-    .badge-visa { background: var(--warning-bg); color: var(--warning-text); }
-
-    .cover-text {
-      font-size: 12px;
-      line-height: 1.65;
-      color: var(--text-2);
-      font-style: italic;
-    }
-
-    /* ── Questions ── */
-    .question-block { margin-bottom: 1.75rem; }
-    .q-label { font-size: 15px; font-weight: 600; margin-bottom: 0.6rem; }
-    .q-hint { font-size: 12px; color: var(--text-3); margin-bottom: 0.85rem; }
-
-    .choice-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-    .choice-btn {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 10px 14px;
-      background: var(--surface);
-      border: 1.5px solid var(--border-strong);
-      border-radius: var(--radius);
-      font-size: 13px;
-      font-weight: 500;
-      color: var(--text-2);
-      cursor: pointer;
-      transition: background 0.12s, border-color 0.12s, color 0.12s;
-      font-family: inherit;
-      text-align: left;
-    }
-    .choice-btn:hover { background: var(--surface-alt); }
-    .choice-btn.selected {
-      border-color: var(--accent);
-      background: var(--accent-bg);
-      color: var(--accent);
-    }
-    .radio-dot {
-      width: 16px; height: 16px;
-      border-radius: 50%;
-      border: 1.5px solid currentColor;
-      flex-shrink: 0;
-      display: flex; align-items: center; justify-content: center;
-    }
-    .choice-btn.selected .radio-dot::after {
-      content: '';
-      width: 8px; height: 8px;
-      border-radius: 50%;
-      background: var(--accent);
-      display: block;
-    }
-
-    /* ── Rating ── */
-    .rating-block { margin-bottom: 10px; }
-    .rating-row { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
-    .rating-name { font-size: 13px; color: var(--text-2); width: 130px; flex-shrink: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .rating-btns { display: flex; gap: 4px; }
-    .rating-btn {
-      width: 34px; height: 34px;
-      border-radius: 50%;
-      border: 1.5px solid var(--border-strong);
-      background: var(--surface);
-      font-size: 12px;
-      font-weight: 500;
-      color: var(--text-2);
-      cursor: pointer;
-      font-family: inherit;
-      transition: background 0.12s;
-    }
-    .rating-btn:hover { background: var(--surface-alt); }
-    .rating-btn.selected { background: var(--text); color: #fff; border-color: var(--text); }
-    .rating-scale-labels {
-      font-size: 11px;
-      color: var(--text-3);
-      display: flex;
-      justify-content: space-between;
-      margin-left: 138px;
-      width: calc(7 * 34px + 6 * 4px);
-    }
-
-    /* ── Done screen ── */
-    .done-screen { max-width: 540px; margin: 3rem auto; text-align: center; }
-    .done-icon { font-size: 48px; margin-bottom: 1rem; }
-    .done-title { font-size: 24px; font-weight: 600; letter-spacing: -0.02em; margin-bottom: 8px; }
-    .done-sub { color: var(--text-2); margin-bottom: 2rem; }
-    .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 2rem; text-align: left; }
-    .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem; }
-    .stat-label { font-size: 12px; color: var(--text-3); margin-bottom: 4px; }
-    .stat-val { font-size: 22px; font-weight: 600; letter-spacing: -0.02em; }
-    .done-actions { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
-
-    /* ── Submitting state ── */
-    .submitting-overlay { display: none; }
-    .error-msg { background: #fef2f2; border: 1px solid #fecaca; color: #991b1b; border-radius: var(--radius); padding: 10px 14px; font-size: 13px; margin-top: 10px; display: none; }
+    .done-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-lg); padding:2rem; max-width:520px; }
+    .done-title { font-size:22px; font-weight:600; letter-spacing:-0.02em; margin-bottom:8px; }
+    .done-sub { color:var(--text-2); font-size:14px; margin-bottom:1.5rem; }
+    .stats { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:1.5rem; }
+    .stat { background:var(--surface-alt); border-radius:var(--radius); padding:1rem; }
+    .stat-label { font-size:12px; color:var(--text-3); margin-bottom:4px; }
+    .stat-val { font-size:22px; font-weight:600; }
+    .divider { height:1px; background:var(--border); margin:1.25rem 0; }
+    .debrief { font-size:13px; color:var(--text-2); line-height:1.6; margin-bottom:1rem; }
+    .done-icon { font-size:36px; margin-bottom:1rem; }
   </style>
 </head>
 <body>
@@ -281,373 +108,444 @@
 <header>
   <div class="header-inner">
     <span class="logo">Hiring<span>Study</span></span>
-    <span id="header-progress" style="font-size:13px; color:var(--text-3);"></span>
+    <span style="font-size:13px;color:var(--text-3);" id="hdr"></span>
   </div>
 </header>
 
+<div class="progress-wrap">
+  <div class="progress-meta"><span id="prog-lbl">Getting started</span><span id="prog-pct"></span></div>
+  <div class="progress-bar"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
+</div>
+
 <div class="shell">
-  <div id="app"></div>
+
+  <div class="screen active" id="s-intro">
+    <div class="intro-card">
+      <h1>Candidate Evaluation Study</h1>
+      <p>You will review <strong>8 job applicants</strong> one at a time for various analyst and professional roles. Each applicant has two steps:</p>
+      <ul>
+        <li><strong>Step 1: Credentials.</strong> Review the applicant's background and rate their qualifications.</li>
+        <li><strong>Step 2: Writing sample.</strong> Read their cover letter and answer questions. Credentials will not be visible during this step.</li>
+      </ul>
+      <p>Please read each section carefully before moving on.</p>
+      <div class="notice">&#9432;&nbsp; There are no right or wrong answers. We are interested in your genuine professional judgment. This survey takes approximately 20 minutes.</div>
+      <button class="btn btn-primary" onclick="start()">Start &rarr;</button>
+    </div>
+  </div>
+
+  <div class="screen" id="s-creds">
+    <p class="eyebrow" id="c-eye"></p>
+    <h2 class="screen-title">Review Credentials</h2>
+    <p class="screen-sub">Read the applicant's background carefully. You will <strong>not</strong> be able to refer back to this during the writing evaluation.</p>
+    <div class="cred-notice">&#9432;&nbsp; Focus on qualifications on this page. The writing sample comes next.</div>
+    <div class="cred-card">
+      <div class="cred-card-header">
+        <div class="cand-name" id="c-name"></div>
+        <div class="cand-subrole" id="c-sub"></div>
+      </div>
+      <div id="c-body"></div>
+    </div>
+    <div class="q-section">
+      <p class="q-label">Based on these credentials alone, how qualified is this applicant?</p>
+      <p class="q-hint">1 = Not at all qualified &nbsp;&middot;&nbsp; 7 = Extremely qualified</p>
+      <div class="rating-btns" id="cred-r"></div>
+      <div class="rating-scale-labels"><span>Not at all</span><span>Extremely qualified</span></div>
+    </div>
+    <div class="nav-row">
+      <span></span>
+      <span class="nav-center" id="c-nav"></span>
+      <button class="btn btn-primary" onclick="toWriting()">Continue to writing sample &rarr;</button>
+    </div>
+  </div>
+
+  <div class="screen" id="s-writing">
+    <p class="eyebrow" id="w-eye"></p>
+    <h2 class="screen-title">Writing Sample Evaluation</h2>
+    <p class="screen-sub">Credentials are no longer visible. Evaluate based on writing only.</p>
+    <div class="letter-card">
+      <div class="letter-card-header"><span class="letter-lbl" id="w-role"></span></div>
+      <div class="letter-body">
+        <div class="letter-name" id="w-name"></div>
+        <div class="letter-meta" id="w-meta"></div>
+        <div class="letter-salutation">Dear Hiring Manager,</div>
+        <div id="w-paras"></div>
+      </div>
+    </div>
+    <div class="q-section">
+      <p class="q-label">Q1. Would you advance this applicant to a phone screen?</p>
+      <div class="choice-row">
+        <button class="choice-btn" id="q1y" onclick="selQ1('yes')"><span class="radio-dot"></span>Yes, advance</button>
+        <button class="choice-btn" id="q1n" onclick="selQ1('no')"><span class="radio-dot"></span>No, pass</button>
+      </div>
+    </div>
+    <div class="q-section">
+      <p class="q-label">Q2. Rate the hireability of this applicant based on their writing.</p>
+      <p class="q-hint">1 = Definitely would not advance &nbsp;&middot;&nbsp; 7 = Definitely would advance</p>
+      <div class="rating-btns" id="q2-r"></div>
+      <div class="rating-scale-labels"><span>Would not advance</span><span>Would advance</span></div>
+    </div>
+    <div class="q-section">
+      <p class="q-label">Q3. How would you describe the overall quality of this writing?</p>
+      <div class="pill-row" id="q3-r"></div>
+    </div>
+    <div class="q-section">
+      <p class="q-label">Q4. Do you think this writing was produced or polished using AI tools?</p>
+      <div class="pill-row" id="q4-r"></div>
+    </div>
+    <div class="q-section">
+      <p class="q-label">Q5. How confident are you in your answer to Q4?</p>
+      <div class="pill-row" id="q5-r"></div>
+    </div>
+    <div class="nav-row">
+      <button class="btn btn-secondary" onclick="back()">&#8592; Back</button>
+      <span class="nav-center" id="w-nav"></span>
+      <button class="btn btn-primary" id="next-btn" onclick="nextStep()">Next applicant &rarr;</button>
+    </div>
+  </div>
+
+  <div class="screen" id="s-done">
+    <div class="done-card">
+      <div class="done-icon">&#10003;</div>
+      <h2 class="done-title">Thank you!</h2>
+      <p class="done-sub">Your responses have been recorded. Here is a summary of your decisions.</p>
+      <div class="stats" id="done-stats"></div>
+      <div class="divider"></div>
+      <p class="debrief"><strong>Study debrief:</strong> This survey is part of research on how hiring professionals evaluate candidates. Some applicants' writing was produced with AI assistance; others wrote without it. Candidates came from both domestic U.S. and international backgrounds with equivalent qualifications. Your responses help us understand whether writing style and candidate origin influence hiring decisions.</p>
+      <button class="btn btn-secondary" onclick="restart()">&#8635; Take it again</button>
+    </div>
+  </div>
+
 </div>
 
 <script>
-const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbwooEWr6j0ZWzU371p5WfM1cYLMLWBTl3Bjr_Z9r6HjHlBpxa8ku8JI7uLUVXRev0lUug/exec';
-
-const PAIRS = [
+const SHEETS_URL = 'YOUR_APPS_SCRIPT_URL_HERE';
+const APPLICANTS = [
   {
-    role: "High School Math Teacher",
-    institution: "Westfield Unified School District",
-    left: {
-      name: "Emily Carter",
-      subtitle: "Math Teacher Candidate",
-      edu: "University of Illinois Urbana-Champaign — B.S. Mathematics Education, 2021",
-      cert: "Illinois Professional Educator License (PEL), Secondary Mathematics",
-      gpa: "3.6",
-      visa: false,
-      exp: [
-        { title: "Student Teacher — Lincoln High School, Springfield, IL (Spring 2021)", desc: "Taught Algebra II and Pre-Calculus to 11th and 12th graders. Developed differentiated lesson plans for mixed-ability classes." },
-        { title: "Math Tutor — University of Illinois Learning Center (2019–2021)", desc: "One-on-one support for undergraduates in Calculus I and II. Maintained 4.8/5 student satisfaction rating." }
-      ],
-      cover: "\"I've wanted to teach math since high school, where a great teacher turned a subject I dreaded into one I loved. My student teaching experience at Lincoln gave me a real sense of what it takes to reach students who think they're 'just not math people.' I'm excited about the opportunity to build that same kind of classroom at Westfield.\""
+    "id": "C1",
+    "treatment": "human",
+    "origin": "domestic",
+    "role": "Actuarial Analyst",
+    "company": "Pinnacle Risk Advisors",
+    "cred": {
+      "name": "Marcus Webb",
+      "location": "Detroit, MI",
+      "edu": "University of Michigan-Dearborn  -  B.S. Mathematics, 2026",
+      "exp": "Actuarial Intern  -  Auto-Owners Insurance (Summer 2025)",
+      "gpa": "3.5",
+      "visa": false,
+      "extra": "SOA Exam P Passed · IBM Data Science Professional Certificate · R Programming (Coursera)"
     },
-    right: {
-      name: "Ji-Woo Han",
-      subtitle: "Math Teacher Candidate",
-      edu: "Seoul National University — B.S. Mathematics, 2020 | M.Ed. Mathematics Education, University of Illinois, 2022",
-      cert: "Illinois Professional Educator License (PEL), Secondary Mathematics",
-      gpa: "3.6",
-      visa: true,
-      exp: [
-        { title: "Student Teacher — Jefferson Middle School, Champaign, IL (Spring 2022)", desc: "Taught 8th-grade Algebra and Geometry. Designed project-based units that increased average quiz scores by 14%." },
-        { title: "Mathematics Instructor — Gangnam Education Center, Seoul (2018–2020)", desc: "College-prep math instruction for students preparing for Korea's national university entrance exam." }
-      ],
-      cover: "\"My background spans two educational systems, which has given me a nuanced understanding of how students build mathematical reasoning under different instructional models. During my M.Ed. practicum at Jefferson Middle School, I developed inquiry-based units that produced measurable gains in student performance. I am committed to bringing that same rigor and creativity to Westfield's students.\""
+    "letter": {
+      "name": "Marcus Webb",
+      "location": "Detroit, MI",
+      "date": "July 9, 2026",
+      "role": "Actuarial Analyst  -  Pinnacle Risk Advisors",
+      "paras": [
+        "I am writing to apply for the Actuarial Analyst position at Pinnacle Risk Advisors. What drew me specifically to this role was the focus on property and casualty loss modeling, because that is the area of actuarial work I find most concrete and important. My dad spent 22 years as an insurance claims adjuster in Detroit and I grew up watching him come home after storms and spend evenings on the phone explaining to people what their policy actually covered. I did not understand then what the math looked like behind those decisions. When I figured that out in college, I wanted to do the math side of what he did.",
+        "Last summer I interned at Auto-Owners Insurance on their reserving team. My main project was building a development triangle in Excel and R for a commercial auto liability line, updating the expected loss factors and comparing our projection against the prior actuarial estimate. This was the first time I had worked with real loss data and it was harder to get clean than I expected. I had to pull records from two separate systems and reconcile them before I could even start the triangle. My supervisor walked me through what the discrepancies usually meant and how to document the judgment calls. By the end of the summer I had a working triangle that the senior actuary used as a starting point for the year-end reserve review, which was something I did not expect to happen with intern work.",
+        "Outside of the internship I passed SOA Exam P in November. I also completed the IBM Data Science Professional Certificate and an R Programming course on Coursera over the past two semesters because I noticed that most of the actuarial work at Auto-Owners involved a lot of data cleaning before any modeling could happen, and I wanted to get faster at that part.",
+        "I am finishing my Mathematics degree at Michigan-Dearborn with a 3.5 GPA and I plan to sit for Exam FM this fall. I am looking for a role where I can keep working on reserving or pricing problems with people who take the technical side seriously. I would really appreciate the chance to talk more about this position at Pinnacle."
+      ]
     }
   },
   {
-    role: "Academic Advisor",
-    institution: "Greendale Community College",
-    left: {
-      name: "Marcus Webb",
-      subtitle: "Academic Advisor Candidate",
-      edu: "Indiana University — B.A. Psychology, 2019 | M.S. Higher Education Student Affairs, 2021",
-      cert: "NACADA member since 2021",
-      gpa: "3.5",
-      visa: false,
-      exp: [
-        { title: "Graduate Advisor — IU Office of Student Success (2021–2023)", desc: "Managed a caseload of 180 first-generation students. Developed a peer mentoring program that improved semester-to-semester retention by 9%." },
-        { title: "Resident Advisor — IU Housing (2017–2019)", desc: "Supported a 45-student floor, facilitated community programming, and mediated conflict resolution." }
-      ],
-      cover: "\"I got into advising because I was a first-gen student myself and didn't have anyone to tell me how college worked. The advisors who made time for me changed my trajectory, and I've spent the past few years trying to be that person for students at IU. Greendale's focus on transfer pathways and workforce readiness is exactly the kind of mission I want to grow in.\""
+    "id": "C2",
+    "treatment": "ai",
+    "origin": "domestic",
+    "role": "Actuarial Analyst",
+    "company": "Pinnacle Risk Advisors",
+    "cred": {
+      "name": "Marcus Webb",
+      "location": "Detroit, MI",
+      "edu": "University of Michigan-Dearborn  -  B.S. Mathematics, 2026",
+      "exp": "Actuarial Intern  -  Auto-Owners Insurance (Summer 2025)",
+      "gpa": "3.5",
+      "visa": false,
+      "extra": "SOA Exam P Passed · IBM Data Science Professional Certificate · R Programming (Coursera)"
     },
-    right: {
-      name: "Mei-Ling Zhou",
-      subtitle: "Academic Advisor Candidate",
-      edu: "Fudan University — B.A. Education, 2018 | M.S. Higher Education Administration, Ohio State University, 2021",
-      cert: "NACADA member since 2021",
-      gpa: "3.5",
-      visa: true,
-      exp: [
-        { title: "Academic Advisor — Ohio State University First-Year Experience (2021–2023)", desc: "Advised 200 students on course selection, degree planning, and academic recovery. Led outreach for students on academic probation." },
-        { title: "International Student Mentor — OSU Global Gateway (2020–2021)", desc: "Supported newly arrived international students in academic and cultural transition. Led workshops on U.S. academic norms and campus resources." }
-      ],
-      cover: "\"My advising experience at Ohio State spans both first-year domestic students and newly arrived international students, which has deepened my ability to meet students where they are — academically and personally. I am skilled at navigating complex degree requirements, building trust with underserved populations, and designing proactive outreach strategies. I would bring that same student-centered commitment to Greendale.\""
+    "letter": {
+      "name": "Marcus Webb",
+      "location": "Detroit, MI",
+      "date": "July 9, 2026",
+      "role": "Actuarial Analyst  -  Pinnacle Risk Advisors",
+      "paras": [
+        "I am writing to apply for the Actuarial Analyst position at Pinnacle Risk Advisors. The firm's focus on property and casualty loss modeling is what drew me to this role specifically. My interest in actuarial science developed through a direct and personal connection to insurance work: my father spent over two decades as a claims adjuster in Detroit, and my early exposure to how coverage decisions affected families after losses shaped my understanding of what rigorous risk quantification is ultimately for. Pinnacle's emphasis on reserve analysis and pricing support aligns closely with the work I developed during my internship at Auto-Owners Insurance.",
+        "During my internship on Auto-Owners' reserving team, I built a commercial auto liability development triangle in Excel and R, updating expected loss development factors and comparing the resulting reserve projection against the prior actuarial estimate. The work required reconciling loss records from two separate systems before the triangle could be constructed, a process that introduced me to the data quality challenges that precede most actuarial analysis in practice. My supervisor helped me understand the documentation standards required for judgment calls within the reconciliation process. The completed triangle was incorporated by the senior actuary as a starting point for the year-end reserve review.",
+        "To strengthen my technical foundation beyond the internship, I passed SOA Exam P in November 2025 and completed the IBM Data Science Professional Certificate along with a Coursera R Programming course. The data science training was motivated directly by what I observed at Auto-Owners: a significant portion of actuarial work involves data preparation before any modeling begins, and I wanted to improve my efficiency at that stage.",
+        "I will complete my B.S. in Mathematics at Michigan-Dearborn with a 3.5 GPA in May 2026 and plan to sit for Exam FM in the fall. I am seeking a role focused on reserving or pricing analysis within a technically rigorous environment. I would welcome the opportunity to discuss this position with you."
+      ]
     }
   },
   {
-    role: "Curriculum Developer",
-    institution: "Riverbend K-12 School District",
-    left: {
-      name: "Brittany Hughes",
-      subtitle: "Curriculum Developer Candidate",
-      edu: "University of Michigan — B.S. Elementary Education, 2018 | M.Ed. Curriculum and Instruction, 2020",
-      cert: "Michigan Teaching Certificate, Elementary (K–8)",
-      gpa: "3.7",
-      visa: false,
-      exp: [
-        { title: "3rd Grade Teacher — Ann Arbor Public Schools (2020–2023)", desc: "Designed and piloted a literacy intervention curriculum adopted district-wide in 2022. Collaborated with curriculum coaches on scope-and-sequence alignment." },
-        { title: "Curriculum Writing Fellow — Michigan Dept. of Education (Summer 2021)", desc: "Contributed to the revision of Michigan's K–5 ELA standards framework. Reviewed and aligned instructional materials across 6 districts." }
-      ],
-      cover: "\"Three years in the classroom taught me that the gap between a written curriculum and what actually works for kids is enormous — and I became obsessed with closing it. The literacy intervention I built at Ann Arbor started as a pilot for 12 students and ended up being used district-wide. I want to bring that classroom-grounded perspective to Riverbend's curriculum team.\""
+    "id": "C3",
+    "treatment": "human",
+    "origin": "international",
+    "role": "Data Analyst",
+    "company": "Meridian Analytics Group",
+    "cred": {
+      "name": "Linh Tran",
+      "location": "Champaign, IL (visa sponsorship required)",
+      "edu": "University of Illinois Urbana-Champaign  -  B.S. Statistics, 2026",
+      "exp": "Data Analytics Intern  -  ShipBob Chicago (Summer 2025)",
+      "gpa": "3.5",
+      "visa": true,
+      "extra": "Google Data Analytics Certificate · Tableau Desktop Specialist · Python for Data Science (LinkedIn Learning)"
     },
-    right: {
-      name: "Anika Patel",
-      subtitle: "Curriculum Developer Candidate",
-      edu: "University of Delhi — B.Ed. Primary Education, 2017 | M.Ed. Curriculum Studies, University of Michigan, 2020",
-      cert: "Michigan Teaching Certificate, Elementary (K–8)",
-      gpa: "3.7",
-      visa: true,
-      exp: [
-        { title: "Curriculum Specialist — Detroit Public Schools Community District (2020–2023)", desc: "Led redesign of the district's K–5 science curriculum aligned to NGSS. Facilitated professional development for 40+ teachers." },
-        { title: "Curriculum Consultant — UNICEF Education Program, New Delhi (2018–2019)", desc: "Developed foundational literacy materials for low-resource primary schools across three Indian states. Adapted materials for multilingual learners." }
-      ],
-      cover: "\"My curriculum work spans high-need urban districts in the United States and multilingual learning environments internationally, giving me a broad lens on how instructional design must adapt to context. At Detroit Public Schools, I led a NGSS-aligned science curriculum overhaul and trained over 40 teachers on implementation. I am excited to bring that systems-level thinking and equity focus to Riverbend.\""
+    "letter": {
+      "name": "Linh Tran",
+      "location": "Champaign, IL (visa sponsorship required)",
+      "date": "July 9, 2026",
+      "role": "Data Analyst  -  Meridian Analytics Group",
+      "paras": [
+        "I am applying for the Data Analyst position at Meridian Analytics Group. I started building spreadsheets when I was in high school in Ho Chi Minh City because my mother ran a small retail shop and tracked everything in a handwritten notebook. She could not easily tell which products were selling and which ones were tying up cash on the shelf. I started building her a simple Excel tracker with formulas and eventually a pivot table that showed her monthly margin by product category. She told me it changed how she ordered inventory. That was the first time I understood what data work could actually do for someone, and it is the reason I ended up studying statistics.",
+        "Last summer I interned at ShipBob in Chicago on their operations analytics team. My main project was building a weekly demand forecast model in Python for a subset of their SKUs that had been flagged for high stockout frequency. I used historical order data going back two years and built a simple moving average model with a seasonal adjustment layer. It was not a sophisticated machine learning approach, but it reduced the average forecast error for those SKUs from about 18% to 11% over the last six weeks of my internship. What I found most interesting about the project was not the model itself but understanding why the error had been so high in the first place, which turned out to be partly a data quality issue in how returns were being recorded.",
+        "I completed the Google Data Analytics Certificate and a LinkedIn Learning Python for Data Science course before the internship to make sure I had a solid foundation going in. I also hold the Tableau Desktop Specialist certification, which I used to build the monitoring dashboard that displayed the forecast accuracy metrics for the team.",
+        "I am finishing my Statistics degree at Illinois with a 3.5 GPA this May. I am happy to discuss visa sponsorship at any point. I would love the chance to talk more about this role at Meridian."
+      ]
     }
   },
   {
-    role: "University Admissions Counselor",
-    institution: "Harwood University",
-    left: {
-      name: "Jake Morrison",
-      subtitle: "Admissions Counselor Candidate",
-      edu: "Purdue University — B.A. Communication, 2020",
-      cert: "NACAC member since 2020",
-      gpa: "3.4",
-      visa: false,
-      exp: [
-        { title: "Admissions Counselor — Purdue University Office of Admissions (2020–2023)", desc: "Managed a recruitment territory covering Indiana and Ohio. Reviewed 1,200+ applications per cycle. Conducted info sessions for 500+ prospective students annually." },
-        { title: "Campus Ambassador and Tour Guide — Purdue (2018–2020)", desc: "Led campus tours and represented Purdue at 15+ college fairs across the Midwest." }
-      ],
-      cover: "\"I found my way into admissions almost by accident — I loved giving tours in undergrad and realized I was good at helping families figure out if a school was right for them. Three years into the role at Purdue, I still get excited walking into a high school and talking with students who have no idea what college will open up for them. I'd love to bring that energy to Harwood.\""
+    "id": "C4",
+    "treatment": "ai",
+    "origin": "international",
+    "role": "Data Analyst",
+    "company": "Meridian Analytics Group",
+    "cred": {
+      "name": "Linh Tran",
+      "location": "Champaign, IL (visa sponsorship required)",
+      "edu": "University of Illinois Urbana-Champaign  -  B.S. Statistics, 2026",
+      "exp": "Data Analytics Intern  -  ShipBob Chicago (Summer 2025)",
+      "gpa": "3.5",
+      "visa": true,
+      "extra": "Google Data Analytics Certificate · Tableau Desktop Specialist · Python for Data Science (LinkedIn Learning)"
     },
-    right: {
-      name: "Yara Mansour",
-      subtitle: "Admissions Counselor Candidate",
-      edu: "American University of Beirut — B.A. Political Science, 2019 | Graduate Certificate, Higher Education Management, Georgetown University, 2021",
-      cert: "NACAC member since 2021",
-      gpa: "3.4",
-      visa: true,
-      exp: [
-        { title: "Admissions Counselor — Georgetown University Undergraduate Admissions (2021–2023)", desc: "Managed international recruitment territory spanning the Middle East and North Africa. Evaluated 900+ applications per cycle with a focus on international student readiness." },
-        { title: "International Student Recruiter — AUB Enrollment Office (2019–2020)", desc: "Represented AUB at college fairs across Lebanon, Jordan, and the UAE. Coordinated scholarship communication for admitted students." }
-      ],
-      cover: "\"My admissions experience at Georgetown has been centered on international recruitment — building relationships with school counselors across the MENA region, evaluating applicants from diverse educational systems, and helping students navigate the complexity of applying to a U.S. university from abroad. I bring a global recruitment perspective that I believe would strengthen Harwood's enrollment strategy and international student pipeline.\""
+    "letter": {
+      "name": "Linh Tran",
+      "location": "Champaign, IL (visa sponsorship required)",
+      "date": "July 9, 2026",
+      "role": "Data Analyst  -  Meridian Analytics Group",
+      "paras": [
+        "I am writing to apply for the Data Analyst position at Meridian Analytics Group. My interest in data analysis developed early and from a practical context: growing up in Ho Chi Minh City, I built inventory tracking spreadsheets for my mother's retail shop after recognizing that her handwritten records made it difficult to identify which products were generating margin versus tying up capital. Seeing how structured data changed her purchasing decisions gave me a concrete understanding of what analytical work can accomplish, and it shaped the direction of my academic and professional development. Meridian's focus on operational and business analytics aligns directly with the type of applied work I find most meaningful.",
+        "During my internship at ShipBob in Chicago, I developed a weekly demand forecast model in Python for a set of high-stockout SKUs using two years of historical order data. The model incorporated a moving average baseline with a seasonal adjustment layer and reduced average forecast error for the target SKUs from approximately 18% to 11% over the final six weeks of my internship. A significant part of the project involved diagnosing the source of prior forecast inaccuracies, which I traced to a data quality issue in how product returns were being categorized in the order management system. I built a Tableau dashboard to monitor forecast accuracy metrics on an ongoing basis, which the analytics team continued using after my internship concluded.",
+        "Prior to the internship, I completed the Google Data Analytics Certificate and a LinkedIn Learning Python for Data Science course to establish a strong technical foundation for the role. I also hold the Tableau Desktop Specialist certification. These credentials, combined with the applied work at ShipBob, reflect my commitment to developing practical analytical skills alongside my Statistics degree.",
+        "I will complete my B.S. in Statistics at Illinois with a 3.5 GPA in May 2026. I am fully prepared to address visa sponsorship questions at any stage of the process. I would welcome the opportunity to discuss how my analytical background aligns with Meridian Analytics Group's needs."
+      ]
+    }
+  },
+  {
+    "id": "C5",
+    "treatment": "human",
+    "origin": "domestic",
+    "role": "Management Consultant",
+    "company": "West Monroe Partners",
+    "cred": {
+      "name": "Jordan Hayes",
+      "location": "Indianapolis, IN",
+      "edu": "Indiana University  -  B.S. Business Analytics, 2026",
+      "exp": "Consulting Intern  -  Crowe LLP (Summer 2025)",
+      "gpa": "3.4",
+      "visa": false,
+      "extra": "Google Project Management Certificate · Toastmasters Club President · National Case Competition Participant"
+    },
+    "letter": {
+      "name": "Jordan Hayes",
+      "location": "Indianapolis, IN",
+      "date": "July 9, 2026",
+      "role": "Management Consultant  -  West Monroe Partners",
+      "paras": [
+        "I am applying for the Management Consultant position at West Monroe Partners. I grew up in a small town in southern Indiana and I was the first person in my family to attend a four-year university. I did not know what consulting was until my sophomore year when a friend dared me to enter a case competition with her because the winner got a gift card. We had no idea what we were doing in the first round. But I found that the structure of the problem, taking an ambiguous business situation and working through it systematically to a recommendation, was something I was genuinely good at and genuinely enjoyed. We ended up winning our regional. That competition is what put consulting on my radar and I have been working toward it since.",
+        "I interned at Crowe LLP last summer on an engagement for a regional hospital system in Indiana that was trying to reduce patient discharge delays. My job was to map the current discharge workflow by interviewing department coordinators, document the process in a flowchart, and identify where the bottlenecks were. I interviewed 14 people across five departments over three weeks. The thing I found was that most of the delay came from a single handoff between the nursing team and the case management team that did not have a standardized communication protocol. My project manager let me present that finding to the client's operations director, which was intimidating but went better than I expected. The client implemented a new handoff checklist based on our recommendation.",
+        "I completed the Google Project Management Certificate last fall and I serve as president of our campus Toastmasters chapter, which I joined specifically to get better at presenting analysis to people who are skeptical of it. That skill matters a lot in consulting and I wanted to practice it outside of class.",
+        "I am finishing my Business Analytics degree at Indiana University with a 3.4 GPA this May. West Monroe's focus on technology-enabled business transformation is the specific kind of consulting I want to do, because the problems tend to require both analytical rigor and change management. I would love to talk more about this role."
+      ]
+    }
+  },
+  {
+    "id": "C6",
+    "treatment": "ai",
+    "origin": "domestic",
+    "role": "Management Consultant",
+    "company": "West Monroe Partners",
+    "cred": {
+      "name": "Jordan Hayes",
+      "location": "Indianapolis, IN",
+      "edu": "Indiana University  -  B.S. Business Analytics, 2026",
+      "exp": "Consulting Intern  -  Crowe LLP (Summer 2025)",
+      "gpa": "3.4",
+      "visa": false,
+      "extra": "Google Project Management Certificate · Toastmasters Club President · National Case Competition Participant"
+    },
+    "letter": {
+      "name": "Jordan Hayes",
+      "location": "Indianapolis, IN",
+      "date": "July 9, 2026",
+      "role": "Management Consultant  -  West Monroe Partners",
+      "paras": [
+        "I am writing to apply for the Management Consultant position at West Monroe Partners. West Monroe's focus on technology-enabled business transformation is the specific type of consulting work I have been building toward, and the firm's reputation for rigorous analytical problem-solving combined with practical implementation support is what drew me to this application. My interest in consulting originated in a regional case competition during my sophomore year at Indiana University, where working through an ambiguous business problem to a structured recommendation revealed both a skill set and a direction I wanted to pursue.",
+        "During my internship at Crowe LLP, I supported an operational improvement engagement for a regional hospital system seeking to reduce patient discharge delays. My responsibilities included mapping the current discharge workflow through structured interviews with 14 coordinators across five departments, documenting the process, and identifying bottlenecks. The analysis revealed that the primary source of delay was an unstandardized handoff protocol between the nursing team and case management, a finding I presented directly to the client's operations director in the final meeting. The client subsequently implemented a handoff checklist based on our recommendation. This experience provided concrete exposure to the process analysis and stakeholder communication responsibilities central to consulting work at West Monroe's level of client engagement.",
+        "To develop the communication skills required to present analytical findings persuasively to skeptical audiences, I joined our campus Toastmasters chapter and currently serve as its president. I also completed the Google Project Management Certificate to strengthen my understanding of structured project delivery. Both reflect a deliberate effort to develop the non-technical dimensions of consulting alongside the analytical core of my Business Analytics degree.",
+        "I will complete my B.S. in Business Analytics at Indiana University with a 3.4 GPA in May 2026. I am looking for a role where analytical rigor and practical business impact reinforce each other. I would welcome the opportunity to discuss this position with you."
+      ]
+    }
+  },
+  {
+    "id": "C7",
+    "treatment": "human",
+    "origin": "international",
+    "role": "Corporate Finance Analyst",
+    "company": "Apogee Financial Partners",
+    "cred": {
+      "name": "Yuna Park",
+      "location": "Ann Arbor, MI (visa sponsorship required)",
+      "edu": "University of Michigan  -  B.S. Finance and Statistics, 2026",
+      "exp": "Due Diligence Intern  -  Hanwha Q Cells Logistics (Seoul, Summer 2025)",
+      "gpa": "3.6",
+      "visa": true,
+      "extra": "Financial Modeling and Valuation (Coursera) · Bloomberg Market Concepts · Investment Club Analyst"
+    },
+    "letter": {
+      "name": "Yuna Park",
+      "location": "Ann Arbor, MI (visa sponsorship required)",
+      "date": "July 9, 2026",
+      "role": "Corporate Finance Analyst  -  Apogee Financial Partners",
+      "paras": [
+        "I am applying for the Corporate Finance Analyst position at Apogee Financial Partners. I came to finance without any obvious path to it. My father is a marine engineer at a shipyard in Busan and finance was not something that came up at home. In my second year at Pusan National University I enrolled in a corporate finance elective mostly because it fit my schedule, and I ended up spending most of that semester genuinely absorbed in how you value a company whose future looks uncertain. I transferred to the University of Michigan the next year partly because I wanted access to the kind of curriculum and professional opportunities that were harder to find in Korea at the undergraduate level. The reason this role at Apogee caught my attention is the focus on actual financial analysis supporting transactions, not just building and maintaining models.",
+        "Last summer I interned on the finance team at Hanwha Q Cells Logistics in Seoul, where I supported due diligence on two acquisition targets in the cold storage and freight forwarding segments. My main task was preparing financial summary memos and building peer benchmarking tables. What complicated the benchmarking was that two of the listed Korean comparables used different revenue recognition policies for long-term service contracts, which made the reported margin figures misleading when placed side by side. I had to go through each company's notes to the financial statements and adjust the numbers before the comparison was meaningful. My supervisor told me afterward that flagging that kind of issue early was exactly what the memo was supposed to do. The adjusted tables went into the final acquisition review materials for both targets.",
+        "At Michigan I work as an equity analyst in the student investment club, covering the industrials sector. I also completed a Financial Modeling and Valuation course on Coursera during the spring semester to build the three-statement modeling skills I wanted to bring into the internship and into a full-time role.",
+        "I am finishing my double major in Finance and Statistics at Michigan with a 3.6 GPA this May. I am prepared to discuss visa sponsorship at any point in the process. I would very much welcome a conversation about this position at Apogee."
+      ]
+    }
+  },
+  {
+    "id": "C8",
+    "treatment": "ai",
+    "origin": "international",
+    "role": "Corporate Finance Analyst",
+    "company": "Apogee Financial Partners",
+    "cred": {
+      "name": "Yuna Park",
+      "location": "Ann Arbor, MI (visa sponsorship required)",
+      "edu": "University of Michigan  -  B.S. Finance and Statistics, 2026",
+      "exp": "Due Diligence Intern  -  Hanwha Q Cells Logistics (Seoul, Summer 2025)",
+      "gpa": "3.6",
+      "visa": true,
+      "extra": "Financial Modeling and Valuation (Coursera) · Bloomberg Market Concepts · Investment Club Analyst"
+    },
+    "letter": {
+      "name": "Yuna Park",
+      "location": "Ann Arbor, MI (visa sponsorship required)",
+      "date": "July 9, 2026",
+      "role": "Corporate Finance Analyst  -  Apogee Financial Partners",
+      "paras": [
+        "I am writing to apply for the Corporate Finance Analyst position at Apogee Financial Partners. The firm's emphasis on transaction-level financial analysis and company evaluation supporting advisory engagements is what drew me to this opening. My interest in corporate finance developed during an elective course at Pusan National University that prompted me to transfer to the University of Michigan to access a more rigorous analytical curriculum and professional development environment. Apogee's focus on applied financial analysis, rather than routine model maintenance, is the type of work I have been preparing for.",
+        "During my internship at Hanwha Q Cells Logistics in Seoul, I supported due diligence on two acquisition targets in the cold storage and freight forwarding segments by preparing financial summary memos and peer benchmarking analyses. A central challenge in the benchmarking work was identifying that two listed Korean comparables applied different revenue recognition policies for long-term service contracts, which produced misleading reported margin figures when compared directly. I traced the discrepancy through each company's notes to the financial statements, made the necessary adjustments, and rebuilt the benchmarking tables on a consistent basis. The adjusted tables were incorporated into the final acquisition review materials for both targets. This experience provided direct exposure to the financial statement analysis and due diligence documentation responsibilities described in this role.",
+        "As an equity analyst in the University of Michigan's student investment club, I cover the industrials sector and contribute company analysis to the club's active portfolio review process. To strengthen my modeling foundation, I completed a Financial Modeling and Valuation course on Coursera, which helped me build the three-statement and DCF skills I applied during the internship and intend to develop further in a full-time role.",
+        "I will complete my B.S. in Finance and Statistics at Michigan with a 3.6 GPA in May 2026. I hold the Bloomberg Market Concepts certification. I am fully prepared to discuss visa sponsorship at any stage of the process. I would welcome the opportunity to speak with someone at Apogee about this position."
+      ]
     }
   }
 ];
 
-let screen = 'intro';
-let current = 0;
-let responses = PAIRS.map(() => ({ q1: null, q2L: null, q2R: null }));
-let respondentId = 'r_' + Date.now() + '_' + Math.random().toString(36).slice(2,7);
-let startTime = Date.now();
+let order=[], idx=0, stage='creds', responses=[];
+let rid='r_'+Date.now()+'_'+Math.random().toString(36).slice(2,7), t0=Date.now();
 
-const app = document.getElementById('app');
-const headerProgress = document.getElementById('header-progress');
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function cur(){return APPLICANTS[order[idx]];}
+function res(){return responses[idx];}
+function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');window.scrollTo(0,0);}
 
-function render() {
-  if (screen === 'intro') renderIntro();
-  else if (screen === 'survey') renderPair(current);
-  else if (screen === 'done') renderDone();
+function progress(){
+  const total=APPLICANTS.length*2, done=idx*2+(stage==='writing'?1:0), pct=Math.round(done/total*100);
+  document.getElementById('prog-fill').style.width=pct+'%';
+  document.getElementById('prog-pct').textContent=pct+'%';
+  document.getElementById('prog-lbl').textContent=`Applicant ${idx+1} of ${APPLICANTS.length}  -  ${stage==='creds'?'Step 1 of 2: Credentials':'Step 2 of 2: Writing'}`;
+  document.getElementById('hdr').textContent=`${idx+1} / ${APPLICANTS.length}`;
 }
 
-function renderIntro() {
-  headerProgress.textContent = '';
-  app.innerHTML = `
-    <div class="intro">
-      <h1>Candidate Evaluation Study</h1>
-      <p>You'll review <strong>4 pairs of candidates</strong> applying for education-sector positions. For each pair, read both profiles carefully and answer two questions.</p>
-      <ul>
-        <li>This survey takes about <strong>5–8 minutes</strong> to complete.</li>
-        <li>There are no right or wrong answers — we're interested in your genuine impressions.</li>
-        <li>Your responses are anonymous and used only for research purposes.</li>
-      </ul>
-      <div class="notice-box">
-        &#9432;&nbsp; For each pair, both candidates are applying for the same role. Treat each decision as you would a real screening decision.
-      </div>
-      <button class="btn btn-primary" onclick="startSurvey()">Start the survey &rarr;</button>
-    </div>`;
+function start(){
+  order=shuffle([0,1,2,3,4,5,6,7]);
+  responses=APPLICANTS.map(()=>({credRating:null,q1:null,q2:null,q3:null,q4:null,q5:null}));
+  idx=0; stage='creds'; renderCreds(); show('s-creds');
 }
 
-function startSurvey() {
-  screen = 'survey';
-  current = 0;
-  render();
+function renderCreds(){
+  stage='creds'; progress();
+  const a=cur(), c=a.cred;
+  document.getElementById('c-eye').textContent=`Applicant ${idx+1} of ${APPLICANTS.length}  -  Step 1 of 2`;
+  document.getElementById('c-name').textContent=c.name;
+  document.getElementById('c-sub').textContent=`Applying for: ${a.role} at ${a.company}`;
+  document.getElementById('c-nav').textContent=`${idx+1} of ${APPLICANTS.length}`;
+  document.getElementById('c-body').innerHTML=
+    cr('Location',c.location)+cr('Education',c.edu)+cr('Experience',c.exp)+
+    `<div class="cred-row"><div class="cred-lbl">GPA</div><div class="cred-val"><span class="badge badge-gpa">${c.gpa}</span></div></div>`+
+    `<div class="cred-row"><div class="cred-lbl">Visa</div><div class="cred-val">${c.visa?'<span class="badge badge-visa">Sponsorship required</span>':'<span class="badge badge-gpa">Not required</span>'}</div></div>`+
+    cr('Additional',c.extra);
+  const r=res();
+  document.getElementById('cred-r').innerHTML=[1,2,3,4,5,6,7].map(n=>`<button class="rating-btn ${r.credRating===n?'selected':''}" onclick="selCred(${n})">${n}</button>`).join('');
 }
 
-function renderPair(idx) {
-  const p = PAIRS[idx];
-  const r = responses[idx];
-  const pct = Math.round((idx / PAIRS.length) * 100);
-  headerProgress.textContent = `${idx + 1} of ${PAIRS.length}`;
+function cr(l,v){return`<div class="cred-row"><div class="cred-lbl">${l}</div><div class="cred-val">${v}</div></div>`;}
 
-  app.innerHTML = `
-    <div class="progress-wrap">
-      <div class="progress-meta">
-        <span style="text-transform:uppercase;letter-spacing:0.05em;">Pair ${idx+1} of ${PAIRS.length}</span>
-        <span>${pct}% complete</span>
-      </div>
-      <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
-    </div>
+function selCred(n){res().credRating=n;document.querySelectorAll('#cred-r .rating-btn').forEach((b,i)=>b.classList.toggle('selected',i+1===n));}
 
-    <div class="pair-header">
-      <p class="pair-eyebrow">Position</p>
-      <h2 class="pair-title">${p.role}</h2>
-      <p class="pair-sub">${p.institution}</p>
-    </div>
+function toWriting(){show('s-writing');renderWriting();}
 
-    <div class="info-banner">
-      &#9432;&nbsp; Both candidates are applying for the same role. Take your time — this decision is incentivized.
-    </div>
-
-    <div class="cards-grid">
-      ${candidateCard(p.left, 'left', r.q1 === 'left')}
-      ${candidateCard(p.right, 'right', r.q1 === 'right')}
-    </div>
-
-    <div class="question-block">
-      <p class="q-label">Q1. Which candidate would you advance to a phone screen?</p>
-      <div class="choice-row">
-        <button class="choice-btn ${r.q1==='left'?'selected':''}" onclick="selectQ1('left')">
-          <span class="radio-dot"></span>${p.left.name}
-        </button>
-        <button class="choice-btn ${r.q1==='right'?'selected':''}" onclick="selectQ1('right')">
-          <span class="radio-dot"></span>${p.right.name}
-        </button>
-      </div>
-    </div>
-
-    <div class="question-block">
-      <p class="q-label">Q2. Rate the hireability of each candidate</p>
-      <p class="q-hint">1 = Definitely would not advance &nbsp;&middot;&nbsp; 7 = Definitely would advance</p>
-      <div class="rating-block">
-        ${ratingRow(p.left.name, 'left', r.q2L)}
-        ${ratingRow(p.right.name, 'right', r.q2R)}
-        <div class="rating-scale-labels"><span>1 — Would not advance</span><span>7 — Would advance</span></div>
-      </div>
-    </div>
-
-    <div id="submit-error" class="error-msg"></div>
-
-    <div class="btn-row">
-      <button class="btn btn-secondary" onclick="navigate(-1)" ${idx===0?'disabled':''}>
-        &larr; Previous
-      </button>
-      <span style="font-size:13px;color:var(--text-3);">${idx+1} of ${PAIRS.length} complete</span>
-      <button class="btn btn-primary" id="next-btn" onclick="navigate(1)">
-        ${idx === PAIRS.length - 1 ? 'Submit &rarr;' : 'Next pair &rarr;'}
-      </button>
-    </div>`;
+function renderWriting(){
+  stage='writing'; progress();
+  const a=cur(), l=a.letter, r=res();
+  document.getElementById('w-eye').textContent=`Applicant ${idx+1} of ${APPLICANTS.length}  -  Step 2 of 2`;
+  document.getElementById('w-role').textContent=`Cover Letter  -  ${l.role}`;
+  document.getElementById('w-name').textContent=l.name;
+  document.getElementById('w-meta').textContent=`${l.location}   ·   ${l.date}`;
+  document.getElementById('w-paras').innerHTML=l.paras.map(p=>`<p class="letter-para">${p}</p>`).join('');
+  document.getElementById('w-nav').textContent=`${idx+1} of ${APPLICANTS.length}`;
+  document.getElementById('q1y').classList.toggle('selected',r.q1==='yes');
+  document.getElementById('q1n').classList.toggle('selected',r.q1==='no');
+  document.getElementById('q2-r').innerHTML=[1,2,3,4,5,6,7].map(n=>`<button class="rating-btn ${r.q2===n?'selected':''}" onclick="selR('q2',${n})">${n}</button>`).join('');
+  pills('q3-r',['Poor','Below average','Average','Above average','Excellent'],'q3',r.q3);
+  pills('q4-r',['Definitely human-written','Probably human-written','Not sure','Probably AI-assisted','Definitely AI-assisted'],'q4',r.q4);
+  pills('q5-r',['Not at all confident','Slightly confident','Moderately confident','Very confident','Extremely confident'],'q5',r.q5);
+  document.getElementById('next-btn').textContent=idx===APPLICANTS.length-1?'Submit':'Next applicant →';
 }
 
-function candidateCard(c, side, selected) {
-  const expHtml = c.exp.map(e => `
-    <p class="field-val">${e.title}</p>
-    <p class="field-sub">${e.desc}</p>
-  `).join('');
+function pills(id,opts,key,val){document.getElementById(id).innerHTML=opts.map(o=>`<button class="pill-btn ${val===o?'selected':''}" onclick="selP('${key}','${o}')">${o}</button>`).join('');}
 
-  return `<div class="cand-card ${selected?'selected':''}" onclick="selectQ1('${side}')">
-    <p class="cand-name">${c.name}</p>
-    <p class="cand-role">${c.subtitle}</p>
-    <div class="card-divider"></div>
-    <p class="field-label">Education</p>
-    <p class="field-val">${c.edu}</p>
-    <div class="badges">
-      <span class="badge badge-gpa">GPA ${c.gpa}</span>
-      ${c.visa ? '<span class="badge badge-visa">Visa sponsorship required</span>' : ''}
-    </div>
-    <p class="field-label">Certification</p>
-    <p class="field-sub">${c.cert}</p>
-    <p class="field-label">Experience</p>
-    ${expHtml}
-    <div class="card-divider"></div>
-    <p class="field-label">Cover letter excerpt</p>
-    <p class="cover-text">${c.cover}</p>
-  </div>`;
+function selQ1(v){res().q1=v;document.getElementById('q1y').classList.toggle('selected',v==='yes');document.getElementById('q1n').classList.toggle('selected',v==='no');}
+function selR(key,n){res()[key]=n;document.querySelectorAll(`#${key==='q2'?'q2-r':'cred-r'} .rating-btn`).forEach((b,i)=>b.classList.toggle('selected',i+1===n));}
+function selP(key,val){res()[key]=val;document.querySelectorAll(`#${key}-r .pill-btn`).forEach(b=>b.classList.toggle('selected',b.textContent===val));}
+
+function back(){show('s-creds');renderCreds();}
+
+async function nextStep(){
+  if(idx===APPLICANTS.length-1){await submit();showDone();}
+  else{idx++;show('s-creds');renderCreds();}
 }
 
-function ratingRow(name, side, val) {
-  let btns = '';
-  for (let i = 1; i <= 7; i++) {
-    btns += `<button class="rating-btn ${val===i?'selected':''}" onclick="selectRating('${side}',${i})">${i}</button>`;
-  }
-  return `<div class="rating-row">
-    <span class="rating-name" title="${name}">${name}</span>
-    <div class="rating-btns">${btns}</div>
-  </div>`;
+async function submit(){
+  const payload={respondent_id:rid,submitted_at:new Date().toISOString(),duration_seconds:Math.round((Date.now()-t0)/1000),
+    responses:order.map((ai,pos)=>{const a=APPLICANTS[ai],r=responses[pos];return{position:pos+1,applicant_id:a.id,treatment:a.treatment,origin:a.origin,role:a.role,candidate_name:a.cred.name,visa_required:a.cred.visa,cred_rating:r.credRating,q1_advance:r.q1,q2_hireability:r.q2,q3_writing_quality:r.q3,q4_ai_detection:r.q4,q5_confidence:r.q5};})};
+  try{await fetch(SHEETS_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});}catch(e){console.warn(e);}
 }
 
-function selectQ1(side) {
-  responses[current].q1 = side;
-  renderPair(current);
+function showDone(){
+  show('s-done');
+  document.getElementById('prog-fill').style.width='100%';
+  document.getElementById('prog-pct').textContent='100%';
+  document.getElementById('prog-lbl').textContent='Complete';
+  document.getElementById('hdr').textContent='Done';
+  const adv=responses.filter(r=>r.q1==='yes').length;
+  const rats=responses.map(r=>r.q2).filter(Boolean);
+  const avg=rats.length?(rats.reduce((a,b)=>a+b,0)/rats.length).toFixed(1):'--';
+  const ai=responses.filter(r=>r.q4&&r.q4.includes('AI')).length;
+  const mins=Math.round((Date.now()-t0)/60000);
+  document.getElementById('done-stats').innerHTML=
+    `<div class="stat"><div class="stat-label">Advanced to phone screen</div><div class="stat-val">${adv} / 8</div></div>`+
+    `<div class="stat"><div class="stat-label">Avg. hireability rating</div><div class="stat-val">${avg} / 7</div></div>`+
+    `<div class="stat"><div class="stat-label">Suspected AI writing</div><div class="stat-val">${ai} / 8</div></div>`+
+    `<div class="stat"><div class="stat-label">Time taken</div><div class="stat-val">${mins} min</div></div>`;
 }
 
-function selectRating(side, val) {
-  if (side === 'left') responses[current].q2L = val;
-  else responses[current].q2R = val;
-  renderPair(current);
-}
-
-function navigate(dir) {
-  if (dir === 1 && current === PAIRS.length - 1) {
-    submitSurvey();
-    return;
-  }
-  current = Math.max(0, Math.min(PAIRS.length - 1, current + dir));
-  renderPair(current);
-}
-
-async function submitSurvey() {
-  const nextBtn = document.getElementById('next-btn');
-  const errEl = document.getElementById('submit-error');
-  if (nextBtn) { nextBtn.disabled = true; nextBtn.textContent = 'Submitting…'; }
-
-  const payload = {
-    respondent_id: respondentId,
-    submitted_at: new Date().toISOString(),
-    duration_seconds: Math.round((Date.now() - startTime) / 1000),
-    responses: PAIRS.map((p, i) => ({
-      pair: i + 1,
-      role: p.role,
-      institution: p.institution,
-      domestic_candidate: p.left.name,
-      international_candidate: p.right.name,
-      q1_advanced: responses[i].q1 === 'left' ? p.left.name : responses[i].q1 === 'right' ? p.right.name : null,
-      q1_advanced_group: responses[i].q1 === 'left' ? 'domestic' : responses[i].q1 === 'right' ? 'international' : null,
-      q2_domestic_rating: responses[i].q2L,
-      q2_international_rating: responses[i].q2R
-    }))
-  };
-
-  try {
-    await fetch(SHEETS_URL, {
-      method: 'POST',
-      mode: 'no-cors',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    });
-  } catch (e) {
-    console.warn('Submission error (responses still shown locally):', e);
-  }
-
-  screen = 'done';
-  render();
-}
-
-function renderDone() {
-  headerProgress.textContent = 'Complete';
-  const domAdv = responses.filter(r => r.q1 === 'left').length;
-  const intlAdv = responses.filter(r => r.q1 === 'right').length;
-  const domRatings = responses.map(r => r.q2L).filter(Boolean);
-  const intlRatings = responses.map(r => r.q2R).filter(Boolean);
-  const avgDom = domRatings.length ? (domRatings.reduce((a,b)=>a+b,0)/domRatings.length).toFixed(1) : '—';
-  const avgIntl = intlRatings.length ? (intlRatings.reduce((a,b)=>a+b,0)/intlRatings.length).toFixed(1) : '—';
-
-  app.innerHTML = `<div class="done-screen">
-    <div class="done-icon">&#10003;</div>
-    <h2 class="done-title">Thank you!</h2>
-    <p class="done-sub">Your responses have been recorded. Here's a quick summary of your decisions across the 4 pairs.</p>
-    <div class="stats-grid">
-      <div class="stat-card"><p class="stat-label">Domestic candidates advanced</p><p class="stat-val">${domAdv} / ${PAIRS.length}</p></div>
-      <div class="stat-card"><p class="stat-label">International candidates advanced</p><p class="stat-val">${intlAdv} / ${PAIRS.length}</p></div>
-      <div class="stat-card"><p class="stat-label">Avg. domestic rating</p><p class="stat-val">${avgDom} / 7</p></div>
-      <div class="stat-card"><p class="stat-label">Avg. international rating</p><p class="stat-val">${avgIntl} / 7</p></div>
-    </div>
-    <div class="done-actions">
-      <button class="btn btn-secondary" onclick="restartSurvey()">&#8635; Take it again</button>
-    </div>
-  </div>`;
-}
-
-function restartSurvey() {
-  responses = PAIRS.map(() => ({ q1: null, q2L: null, q2R: null }));
-  respondentId = 'r_' + Date.now() + '_' + Math.random().toString(36).slice(2,7);
-  startTime = Date.now();
-  current = 0;
-  screen = 'intro';
-  render();
-}
-
-render();
+function restart(){rid='r_'+Date.now()+'_'+Math.random().toString(36).slice(2,7);t0=Date.now();idx=0;responses=[];show('s-intro');document.getElementById('prog-fill').style.width='0%';document.getElementById('prog-pct').textContent='';document.getElementById('prog-lbl').textContent='Getting started';document.getElementById('hdr').textContent='';}
 </script>
 </body>
 </html>
