@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Writing Task — HiringStudy</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #f8f9fa; --surface: #ffffff; --surface-alt: #f3f4f6;
+      --border: #e5e7eb; --border-strong: #d1d5db;
+      --text: #111827; --text-2: #4b5563; --text-3: #9ca3af;
+      --accent: #1d4ed8; --accent-bg: #eff6ff; --accent-border: #bfdbfe;
+      --warn: #92400e; --warn-bg: #fffbeb; --warn-border: #fcd34d;
+      --danger: #991b1b; --danger-bg: #fef2f2; --danger-border: #fca5a5;
+      --success: #065f46; --success-bg: #ecfdf5;
+      --radius: 8px; --radius-lg: 12px;
+    }
+    body { font-family: 'Inter', sans-serif; background: var(--bg);
+      color: var(--text); min-height: 100vh; font-size: 15px; line-height: 1.6; }
+
+    header { border-bottom: 1px solid var(--border); background: var(--surface); }
+    .header-inner { max-width: 820px; margin: 0 auto; padding: 0.9rem 1.25rem;
+      display: flex; align-items: center; justify-content: space-between; }
+    .logo { font-size: 14px; font-weight: 600; }
+    .logo span { color: var(--accent); }
+
+    .shell { max-width: 820px; margin: 0 auto; padding: 1.5rem 1.25rem 4rem; }
+
+    /* ── Warning banner ── */
+    .warn-banner { display: none; background: var(--warn-bg);
+      border: 1px solid var(--warn-border); border-radius: var(--radius);
+      padding: 0.75rem 1rem; font-size: 13px; color: var(--warn);
+      margin-bottom: 1rem; display: flex; align-items: center; gap: 8px; }
+    .warn-banner.hidden { display: none; }
+    .warn-banner.visible { display: flex; }
+
+    .danger-banner { background: var(--danger-bg); border: 1px solid var(--danger-border);
+      border-radius: var(--radius); padding: 0.75rem 1rem; font-size: 13px;
+      color: var(--danger); margin-bottom: 1rem; display: none; gap: 8px; align-items: center; }
+    .danger-banner.visible { display: flex; }
+
+    /* ── Job card ── */
+    .job-card { background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius-lg); padding: 1.25rem 1.4rem; margin-bottom: 1.5rem; }
+    .job-card h2 { font-size: 16px; font-weight: 600; margin-bottom: 0.35rem; }
+    .job-meta { font-size: 13px; color: var(--text-3); margin-bottom: 0.85rem; }
+    .job-desc { font-size: 13px; color: var(--text-2); line-height: 1.7; }
+    .job-skills { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 0.85rem; }
+    .skill-tag { font-size: 11px; padding: 3px 10px; border-radius: 99px;
+      background: var(--surface-alt); border: 1px solid var(--border);
+      color: var(--text-2); }
+
+    /* ── Instructions ── */
+    .instructions { background: var(--accent-bg); border: 1px solid var(--accent-border);
+      border-radius: var(--radius); padding: 0.85rem 1rem; font-size: 13px;
+      color: #1e40af; margin-bottom: 1.25rem; }
+    .instructions ul { padding-left: 1.25rem; margin-top: 6px; }
+    .instructions li { margin-bottom: 3px; }
+
+    /* ── Writing area ── */
+    .writing-card { background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius-lg); overflow: hidden; margin-bottom: 1.25rem; }
+    .writing-header { background: var(--surface-alt); border-bottom: 1px solid var(--border);
+      padding: 0.75rem 1.1rem; display: flex; align-items: center;
+      justify-content: space-between; }
+    .writing-label { font-size: 13px; font-weight: 600; color: var(--text-2); }
+
+    /* stats row */
+    .stats-row { display: flex; gap: 1.25rem; align-items: center; }
+    .stat-item { font-size: 12px; color: var(--text-3); display: flex;
+      align-items: center; gap: 4px; }
+    .stat-item.warn { color: var(--warn); font-weight: 500; }
+    .stat-item.ok { color: var(--success); }
+
+    textarea#cover-letter {
+      width: 100%; min-height: 280px; padding: 1.1rem 1.25rem;
+      font-family: 'Inter', sans-serif; font-size: 14px; line-height: 1.75;
+      color: var(--text); border: none; outline: none; resize: vertical;
+      background: var(--surface);
+    }
+
+    /* Progress bar under textarea */
+    .progress-wrap { padding: 0.6rem 1.1rem; border-top: 1px solid var(--border);
+      background: var(--surface-alt); display: flex; align-items: center; gap: 12px; }
+    .progress-bar { flex: 1; height: 4px; background: var(--border);
+      border-radius: 99px; overflow: hidden; }
+    .progress-fill { height: 100%; border-radius: 99px; transition: width 0.3s, background 0.3s; }
+    .progress-label { font-size: 12px; color: var(--text-3); white-space: nowrap; }
+
+    /* Timer */
+    .timer-section { background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 0.85rem 1rem; margin-bottom: 1.25rem;
+      display: flex; align-items: center; justify-content: space-between; }
+    .timer-label { font-size: 13px; color: var(--text-2); }
+    .timer-display { font-size: 22px; font-weight: 600; color: var(--text);
+      font-variant-numeric: tabular-nums; }
+    .timer-display.warn { color: var(--warn); }
+    .timer-note { font-size: 11px; color: var(--text-3); margin-top: 2px; }
+
+    /* Integrity notice */
+    .integrity { background: var(--surface-alt); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 0.85rem 1rem; font-size: 12px;
+      color: var(--text-3); margin-bottom: 1.5rem; line-height: 1.6; }
+    .integrity strong { color: var(--text-2); }
+
+    /* Submit button */
+    .submit-btn { width: 100%; padding: 12px; background: var(--accent);
+      color: #fff; border: none; border-radius: var(--radius); font-size: 15px;
+      font-weight: 500; cursor: pointer; font-family: inherit;
+      transition: background 0.15s, opacity 0.15s; }
+    .submit-btn:hover { background: #1e40af; }
+    .submit-btn:disabled { opacity: 0.45; pointer-events: none; }
+
+    /* Done screen */
+    .done-screen { display: none; text-align: center; padding: 3rem 1rem; }
+    .done-screen.visible { display: block; }
+    .done-icon { font-size: 48px; margin-bottom: 1rem; }
+    .done-title { font-size: 22px; font-weight: 600; margin-bottom: 8px; }
+    .done-sub { color: var(--text-2); font-size: 14px; }
+
+    /* Log table (debug, hidden in production) */
+    #debug-log { display: none; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <span class="logo">Hiring<span>Study</span></span>
+    <span style="font-size:13px;color:var(--text-3);">Writing Task</span>
+  </div>
+</header>
+
+<div class="shell" id="main-shell">
+
+  <!-- ── Paste warning ── -->
+  <div class="warn-banner hidden" id="paste-warn">
+    ⚠️ &nbsp;<strong>Pasting is not allowed.</strong> Please type your response directly in the box.
+  </div>
+
+  <!-- ── Tab-switch warning ── -->
+  <div class="warn-banner hidden" id="focus-warn">
+    ⚠️ &nbsp;You navigated away from this page. Please stay on this tab while completing the writing task. <span id="focus-count-label"></span>
+  </div>
+
+  <!-- ── Speed warning ── -->
+  <div class="danger-banner" id="speed-warn">
+    🚫 &nbsp;<strong>Unusually fast text input detected.</strong> Please ensure you are writing your response yourself. Your response has been flagged.
+  </div>
+
+  <!-- ── Job description card ── -->
+  <div class="job-card">
+    <h2>Financial Analyst — Apogee Financial Partners</h2>
+    <p class="job-meta">Full-time &nbsp;·&nbsp; Entry-level &nbsp;·&nbsp; Finance / Investment</p>
+    <p class="job-desc">
+      Apogee Financial Partners is looking for a motivated Financial Analyst to join our team.
+      You will support financial statement analysis, build valuation models, and contribute to
+      client-facing research and presentations. This role offers direct exposure to advisory
+      engagements and strong mentorship from senior analysts.
+    </p>
+    <div class="job-skills">
+      <span class="skill-tag">Excel / Financial Modeling</span>
+      <span class="skill-tag">Valuation (DCF, Comps)</span>
+      <span class="skill-tag">Financial Statement Analysis</span>
+      <span class="skill-tag">Research Memos</span>
+      <span class="skill-tag">Client Presentations</span>
+    </div>
+  </div>
+
+  <!-- ── Instructions ── -->
+  <div class="instructions">
+    <strong>Your task:</strong> Write a cover letter for this position as if you are applying for it.
+    <ul>
+      <li>Write between <strong>150 and 300 words</strong></li>
+      <li>You have <strong>at least 6 minutes</strong> to complete this task</li>
+      <li>Do not use AI writing tools — write in your own words</li>
+      <li>Do not copy and paste from another source</li>
+      <li>Stay on this page until you submit</li>
+    </ul>
+  </div>
+
+  <!-- ── Timer ── -->
+  <div class="timer-section">
+    <div>
+      <p class="timer-label">Time elapsed</p>
+      <p class="timer-note">Minimum 6 minutes required before submitting</p>
+    </div>
+    <div style="text-align:right;">
+      <div class="timer-display" id="timer-display">0:00</div>
+      <div id="timer-status" style="font-size:11px;color:var(--text-3);margin-top:2px;">
+        Submit unlocks at 6:00
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Writing area ── -->
+  <div class="writing-card">
+    <div class="writing-header">
+      <span class="writing-label">Cover Letter</span>
+      <div class="stats-row">
+        <span class="stat-item" id="word-count-label">0 words</span>
+        <span class="stat-item" id="focus-switch-label"></span>
+      </div>
+    </div>
+
+    <textarea id="cover-letter"
+      placeholder="Dear Hiring Manager,&#10;&#10;Start writing your cover letter here..."
+      spellcheck="true"
+      autocomplete="off"
+      autocorrect="on"
+    ></textarea>
+
+    <div class="progress-wrap">
+      <div class="progress-bar">
+        <div class="progress-fill" id="word-progress" style="width:0%;background:#e5e7eb;"></div>
+      </div>
+      <span class="progress-label" id="word-progress-label">0 / 150 words minimum</span>
+    </div>
+  </div>
+
+  <!-- ── Integrity notice ── -->
+  <div class="integrity">
+    <strong>Integrity notice:</strong> This task monitors paste events, tab switches, and writing speed
+    to ensure responses are written independently. We do not record your screen or keystrokes.
+    Flagged responses may be excluded from analysis. By submitting you confirm this is your own writing.
+  </div>
+
+  <!-- ── Submit ── -->
+  <button class="submit-btn" id="submit-btn" disabled onclick="submitTask()">
+    Submit cover letter
+  </button>
+
+</div>
+
+<!-- ── Done screen ── -->
+<div class="done-screen" id="done-screen">
+  <div class="done-icon">&#10003;</div>
+  <h2 class="done-title">Writing task complete</h2>
+  <p class="done-sub">Thank you. Your response has been recorded. The next part of the study will begin shortly.</p>
+</div>
+
+<!-- Hidden data store -->
+<textarea id="debug-log"></textarea>
+
+<script>
+// ── Config ────────────────────────────────────────────────────────────────────
+const MIN_WORDS       = 150;
+const MAX_WORDS       = 300;
+const MIN_SECONDS     = 360;   // 6 minutes
+const MAX_FOCUS_WARNS = 3;     // flag after this many tab switches
+const SPEED_THRESHOLD = 300;   // chars per second burst = flag
+
+// ── State ─────────────────────────────────────────────────────────────────────
+let startTime        = Date.now();
+let elapsedSeconds   = 0;
+let timerReady       = false;
+let focusSwitches    = 0;
+let pasteCount       = 0;
+let speedFlagged     = false;
+let lastLength       = 0;
+let lastCheckTime    = Date.now();
+let charBursts       = [];   // track rapid input events
+
+const textarea    = document.getElementById('cover-letter');
+const submitBtn   = document.getElementById('submit-btn');
+const timerEl     = document.getElementById('timer-display');
+const timerStatus = document.getElementById('timer-status');
+const wordLabel   = document.getElementById('word-count-label');
+const wordProg    = document.getElementById('word-progress');
+const wordProgLbl = document.getElementById('word-progress-label');
+const pasteWarn   = document.getElementById('paste-warn');
+const focusWarn   = document.getElementById('focus-warn');
+const speedWarn   = document.getElementById('speed-warn');
+const focusLabel  = document.getElementById('focus-switch-label');
+const focusCount  = document.getElementById('focus-count-label');
+
+// ── Timer ─────────────────────────────────────────────────────────────────────
+function formatTime(s) {
+  const m = Math.floor(s / 60);
+  const sec = s % 60;
+  return `${m}:${sec.toString().padStart(2,'0')}`;
+}
+
+const timerInterval = setInterval(() => {
+  elapsedSeconds = Math.floor((Date.now() - startTime) / 1000);
+  timerEl.textContent = formatTime(elapsedSeconds);
+
+  if (elapsedSeconds >= MIN_SECONDS) {
+    timerReady = true;
+    timerEl.classList.remove('warn');
+    timerStatus.textContent = 'Minimum time reached ✓';
+    timerStatus.style.color = '#065f46';
+  } else {
+    const remaining = MIN_SECONDS - elapsedSeconds;
+    timerStatus.textContent = `Submit unlocks in ${formatTime(remaining)}`;
+    if (remaining <= 60) timerEl.classList.add('warn');
+  }
+  checkSubmit();
+}, 1000);
+
+// ── Word count ────────────────────────────────────────────────────────────────
+function countWords(text) {
+  return text.trim().split(/\s+/).filter(w => w.length > 0).length;
+}
+
+function updateWordCount() {
+  const text = textarea.value;
+  const words = countWords(text);
+  const pct = Math.min(words / MIN_WORDS * 100, 100);
+
+  wordLabel.textContent = `${words} word${words !== 1 ? 's' : ''}`;
+  wordLabel.className = `stat-item ${words >= MIN_WORDS ? 'ok' : ''}`;
+
+  wordProg.style.width = pct + '%';
+  if (words < MIN_WORDS) {
+    wordProg.style.background = '#e5e7eb';
+    wordProgLbl.textContent = `${words} / ${MIN_WORDS} words minimum`;
+  } else if (words <= MAX_WORDS) {
+    wordProg.style.background = '#10b981';
+    wordProgLbl.textContent = `${words} words ✓ (max ${MAX_WORDS})`;
+  } else {
+    wordProg.style.background = '#f59e0b';
+    wordProgLbl.textContent = `${words} words — over ${MAX_WORDS} limit`;
+  }
+  checkSubmit();
+}
+
+// ── Submit gate ───────────────────────────────────────────────────────────────
+function checkSubmit() {
+  const words = countWords(textarea.value);
+  const ready = timerReady && words >= MIN_WORDS && words <= MAX_WORDS;
+  submitBtn.disabled = !ready;
+}
+
+// ── Paste detection ───────────────────────────────────────────────────────────
+textarea.addEventListener('paste', (e) => {
+  e.preventDefault();
+  pasteCount++;
+  pasteWarn.classList.remove('hidden');
+  pasteWarn.classList.add('visible');
+  logEvent('PASTE_BLOCKED', { count: pasteCount });
+  setTimeout(() => {
+    pasteWarn.classList.remove('visible');
+    pasteWarn.classList.add('hidden');
+  }, 4000);
+});
+
+// ── Context menu block (right-click paste) ────────────────────────────────────
+textarea.addEventListener('contextmenu', (e) => e.preventDefault());
+
+// ── Tab / window focus detection ──────────────────────────────────────────────
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) {
+    focusSwitches++;
+    logEvent('FOCUS_LOST', { count: focusSwitches, elapsed: elapsedSeconds });
+
+    focusWarn.classList.remove('hidden');
+    focusWarn.classList.add('visible');
+    focusCount.textContent = `(${focusSwitches} time${focusSwitches > 1 ? 's' : ''})`;
+
+    if (focusSwitches > 1) {
+      focusLabel.textContent = `⚠ ${focusSwitches} tab switches`;
+      focusLabel.className = 'stat-item warn';
+    }
+  } else {
+    setTimeout(() => {
+      focusWarn.classList.remove('visible');
+      focusWarn.classList.add('hidden');
+    }, 5000);
+  }
+});
+
+window.addEventListener('blur', () => {
+  logEvent('WINDOW_BLUR', { elapsed: elapsedSeconds });
+});
+
+// ── Typing speed monitor ──────────────────────────────────────────────────────
+textarea.addEventListener('input', () => {
+  const now = Date.now();
+  const currentLength = textarea.value.length;
+  const delta = currentLength - lastLength;
+  const timeDelta = (now - lastCheckTime) / 1000;
+
+  if (timeDelta > 0 && delta > 0) {
+    const charsPerSec = delta / timeDelta;
+    if (charsPerSec > SPEED_THRESHOLD && delta > 50) {
+      speedFlagged = true;
+      speedWarn.classList.add('visible');
+      logEvent('SPEED_FLAG', { charsPerSec: Math.round(charsPerSec), delta });
+    }
+  }
+
+  lastLength = currentLength;
+  lastCheckTime = now;
+  updateWordCount();
+});
+
+// ── Event log ────────────────────────────────────────────────────────────────
+const eventLog = [];
+function logEvent(type, data = {}) {
+  eventLog.push({ type, ts: Date.now(), elapsed: elapsedSeconds, ...data });
+}
+
+// ── Submit ────────────────────────────────────────────────────────────────────
+function submitTask() {
+  clearInterval(timerInterval);
+
+  const payload = {
+    prolific_pid: new URLSearchParams(window.location.search).get('PROLIFIC_PID') || 'test',
+    text: textarea.value,
+    word_count: countWords(textarea.value),
+    time_seconds: elapsedSeconds,
+    paste_count: pasteCount,
+    focus_switches: focusSwitches,
+    speed_flagged: speedFlagged,
+    integrity_score: calcIntegrityScore(),
+    events: eventLog,
+  };
+
+  // POST to your existing Google Apps Script endpoint
+  const SHEETS_URL = 'YOUR_APPS_SCRIPT_URL_HERE';
+  fetch(SHEETS_URL, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ type: 'writing_task', ...payload })
+  }).catch(e => console.warn(e));
+
+  document.getElementById('main-shell').style.display = 'none';
+  document.getElementById('done-screen').classList.add('visible');
+  console.log('Submitted:', payload);
+}
+
+// ── Integrity score (0-100, higher = more trustworthy) ────────────────────────
+function calcIntegrityScore() {
+  let score = 100;
+  if (pasteCount > 0) score -= pasteCount * 20;
+  if (focusSwitches > 0) score -= focusSwitches * 10;
+  if (speedFlagged) score -= 30;
+  if (elapsedSeconds < MIN_SECONDS * 0.5) score -= 20;
+  return Math.max(0, score);
+}
+
+// ── Init ──────────────────────────────────────────────────────────────────────
+logEvent('TASK_START');
+updateWordCount();
+</script>
+</body>
+</html>
