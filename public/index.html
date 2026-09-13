@@ -1,561 +1,770 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Candidate Evaluation Survey</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Writing Study — DePauw University</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    :root {
-      --bg:#f8f9fa; --surface:#ffffff; --surface-alt:#f3f4f6;
-      --border:#e5e7eb; --border-strong:#d1d5db;
-      --text:#111827; --text-2:#4b5563; --text-3:#9ca3af;
-      --accent:#1d4ed8; --accent-bg:#eff6ff; --accent-border:#bfdbfe;
-      --green:#065f46; --green-bg:#ecfdf5;
-      --warn:#92400e; --warn-bg:#fffbeb;
-      --radius:8px; --radius-lg:12px;
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    :root{
+      --bg:#f8f9fa;--surface:#fff;--surface-alt:#f3f4f6;
+      --border:#e5e7eb;--border-strong:#d1d5db;
+      --text:#111827;--text-2:#4b5563;--text-3:#9ca3af;
+      --accent:#1d4ed8;--accent-bg:#eff6ff;--accent-border:#bfdbfe;
+      --warn:#92400e;--warn-bg:#fffbeb;--warn-border:#fcd34d;
+      --danger:#991b1b;--danger-bg:#fef2f2;--danger-border:#fca5a5;
+      --success:#065f46;--success-bg:#ecfdf5;--success-border:#6ee7b7;
+      --radius:8px;--radius-lg:12px;
     }
-    body { font-family:'Inter',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; font-size:15px; line-height:1.6; }
-    header { border-bottom:1px solid var(--border); background:var(--surface); }
-    .header-inner { max-width:760px; margin:0 auto; padding:0.9rem 1.25rem; display:flex; align-items:center; justify-content:space-between; }
-    .logo { font-size:14px; font-weight:600; } .logo span { color:var(--accent); }
-    .progress-wrap { max-width:760px; margin:0 auto; padding:1rem 1.25rem 0; }
-    .progress-meta { display:flex; justify-content:space-between; font-size:12px; color:var(--text-3); margin-bottom:5px; }
-    .progress-bar { height:3px; background:var(--border); border-radius:99px; }
-    .progress-fill { height:100%; background:var(--accent); border-radius:99px; transition:width 0.4s ease; }
-    .shell { max-width:760px; margin:0 auto; padding:1.5rem 1.25rem 5rem; }
-    .screen { display:none; } .screen.active { display:block; }
-
-    .intro-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-lg); padding:2rem; max-width:600px; }
-    .intro-card h1 { font-size:22px; font-weight:600; letter-spacing:-0.02em; margin-bottom:0.75rem; }
-    .intro-card p { color:var(--text-2); margin-bottom:0.85rem; font-size:14px; }
-    .intro-card ul { color:var(--text-2); font-size:14px; padding-left:1.25rem; margin-bottom:1.25rem; }
-    .intro-card ul li { margin-bottom:0.35rem; }
-    .notice { background:var(--accent-bg); border:1px solid var(--accent-border); border-radius:var(--radius); padding:0.8rem 1rem; font-size:13px; color:#1e40af; margin-bottom:1.5rem; }
-
-    .eyebrow { font-size:11px; font-weight:600; letter-spacing:0.07em; text-transform:uppercase; color:var(--text-3); margin-bottom:4px; }
-    .screen-title { font-size:19px; font-weight:600; letter-spacing:-0.01em; margin-bottom:4px; }
-    .screen-sub { font-size:13px; color:var(--text-2); margin-bottom:1.25rem; }
-    .cred-notice { background:var(--surface-alt); border:1px solid var(--border); border-radius:var(--radius); padding:0.75rem 1rem; font-size:13px; color:var(--text-2); margin-bottom:1.25rem; }
-
-    .cred-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-lg); overflow:hidden; margin-bottom:1.25rem; }
-    .cred-card-header { background:var(--surface-alt); border-bottom:1px solid var(--border); padding:0.85rem 1.1rem; }
-    .cand-name { font-size:17px; font-weight:600; }
-    .cand-subrole { font-size:12px; color:var(--text-3); margin-top:2px; }
-    .cred-row { display:flex; border-bottom:1px solid var(--border); }
-    .cred-row:last-child { border-bottom:none; }
-    .cred-lbl { width:130px; flex-shrink:0; padding:10px 14px; font-size:12px; font-weight:600; color:var(--text-2); background:var(--surface-alt); border-right:1px solid var(--border); }
-    .cred-val { padding:10px 14px; font-size:13px; color:var(--text); flex:1; }
-    .badge { display:inline-block; font-size:11px; font-weight:600; padding:2px 8px; border-radius:4px; }
-    .badge-gpa { background:var(--green-bg); color:var(--green); }
-    .badge-visa { background:var(--warn-bg); color:var(--warn); }
-
-    .q-section { margin-bottom:1.5rem; }
-    .q-label { font-size:15px; font-weight:600; margin-bottom:0.6rem; }
-    .q-hint { font-size:12px; color:var(--text-3); margin-bottom:0.85rem; }
-    .rating-btns { display:flex; gap:5px; }
-    .rating-btn { width:36px; height:36px; border-radius:50%; border:1.5px solid var(--border-strong); background:var(--surface); font-size:13px; font-weight:500; color:var(--text-2); cursor:pointer; font-family:inherit; transition:background 0.1s; display:flex; align-items:center; justify-content:center; }
-    .rating-btn:hover { background:var(--surface-alt); }
-    .rating-btn.selected { background:var(--text); color:#fff; border-color:var(--text); }
-    .rating-scale-labels { display:flex; justify-content:space-between; font-size:11px; color:var(--text-3); margin-top:5px; width:calc(7*36px + 6*5px); }
-
-    .letter-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-lg); overflow:hidden; margin-bottom:1.5rem; }
-    .letter-card-header { background:var(--surface-alt); border-bottom:1px solid var(--border); padding:0.85rem 1.1rem; }
-    .letter-lbl { font-size:12px; font-weight:600; color:var(--text-2); }
-    .letter-body { padding:1.25rem 1.4rem; }
-    .letter-name { font-size:15px; font-weight:600; }
-    .letter-meta { font-size:12px; color:var(--text-3); margin-top:2px; margin-bottom:1rem; }
-    .letter-salutation { font-size:13px; color:var(--text-3); margin-bottom:0.85rem; }
-    .letter-para { font-size:14px; line-height:1.8; color:var(--text-2); margin-bottom:0.9rem; }
-    .letter-para:last-child { margin-bottom:0; }
-
-    .choice-row { display:grid; grid-template-columns:1fr 1fr; gap:8px; max-width:380px; }
-    .choice-btn { display:flex; align-items:center; gap:10px; padding:10px 14px; background:var(--surface); border:1.5px solid var(--border-strong); border-radius:var(--radius); font-size:13px; font-weight:500; color:var(--text-2); cursor:pointer; font-family:inherit; transition:background 0.1s, border-color 0.1s, color 0.1s; }
-    .choice-btn:hover { background:var(--surface-alt); }
-    .choice-btn.selected { border-color:var(--accent); background:var(--accent-bg); color:var(--accent); }
-    .radio-dot { width:16px; height:16px; border-radius:50%; border:1.5px solid currentColor; flex-shrink:0; display:flex; align-items:center; justify-content:center; }
-    .choice-btn.selected .radio-dot::after { content:\'\'; width:8px; height:8px; border-radius:50%; background:var(--accent); display:block; }
-
-    .pill-row { display:flex; flex-wrap:wrap; gap:6px; }
-    .pill-btn { padding:7px 14px; background:var(--surface); border:1.5px solid var(--border-strong); border-radius:99px; font-size:13px; color:var(--text-2); cursor:pointer; font-family:inherit; transition:background 0.1s, border-color 0.1s; }
-    .pill-btn:hover { background:var(--surface-alt); }
-    .pill-btn.selected { border-color:var(--accent); background:var(--accent-bg); color:var(--accent); font-weight:500; }
-
-    .nav-row { display:flex; align-items:center; justify-content:space-between; margin-top:2rem; padding-top:1.25rem; border-top:1px solid var(--border); }
-    .nav-center { font-size:13px; color:var(--text-3); }
-    .btn { display:inline-flex; align-items:center; gap:6px; padding:10px 20px; border-radius:var(--radius); font-size:14px; font-weight:500; cursor:pointer; border:1px solid transparent; transition:background 0.15s; font-family:inherit; }
-    .btn-primary { background:var(--accent); color:#fff; }
-    .btn-primary:hover { background:#1e40af; }
-    .btn-secondary { background:var(--surface); color:var(--text); border-color:var(--border-strong); }
-    .btn-secondary:hover { background:var(--surface-alt); }
-
-    .done-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-lg); padding:2rem; max-width:520px; }
-    .done-title { font-size:22px; font-weight:600; letter-spacing:-0.02em; margin-bottom:8px; }
-    .done-sub { color:var(--text-2); font-size:14px; margin-bottom:1.5rem; }
-    .stats { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:1.5rem; }
-    .stat { background:var(--surface-alt); border-radius:var(--radius); padding:1rem; }
-    .stat-label { font-size:12px; color:var(--text-3); margin-bottom:4px; }
-    .stat-val { font-size:22px; font-weight:600; }
-    .divider { height:1px; background:var(--border); margin:1.25rem 0; }
-    .debrief { font-size:13px; color:var(--text-2); line-height:1.6; margin-bottom:1rem; }
-    .done-icon { font-size:36px; margin-bottom:1rem; }
+    body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);
+      min-height:100vh;font-size:15px;line-height:1.6;}
+    header{border-bottom:1px solid var(--border);background:var(--surface);}
+    .header-inner{max-width:760px;margin:0 auto;padding:0.9rem 1.25rem;
+      display:flex;align-items:center;justify-content:space-between;}
+    .logo{font-size:14px;font-weight:600;}
+    .logo span{color:var(--accent);}
+    .progress-wrap{max-width:760px;margin:0 auto;padding:0.75rem 1.25rem 0;}
+    .progress-bar{height:3px;background:var(--border);border-radius:99px;}
+    .progress-fill{height:100%;background:var(--accent);border-radius:99px;transition:width 0.4s;}
+    .step-label{font-size:11px;color:var(--text-3);margin-bottom:5px;
+      display:flex;justify-content:space-between;}
+    .shell{max-width:760px;margin:0 auto;padding:1.5rem 1.25rem 4rem;}
+    .screen{display:none;} .screen.active{display:block;}
+ 
+    .card{background:var(--surface);border:1px solid var(--border);
+      border-radius:var(--radius-lg);padding:1.5rem 1.75rem;margin-bottom:1.25rem;}
+    .card h3{font-size:15px;font-weight:600;margin-bottom:0.4rem;}
+    .card p{color:var(--text-2);font-size:14px;margin-bottom:0.75rem;line-height:1.7;}
+    .card ul{color:var(--text-2);font-size:14px;padding-left:1.3rem;margin-bottom:0.75rem;}
+    .card ul li{margin-bottom:0.3rem;line-height:1.65;}
+    .card p:last-child,.card ul:last-child{margin-bottom:0;}
+    .badge{display:inline-block;font-size:11px;font-weight:600;padding:2px 9px;
+      border-radius:4px;background:var(--accent-bg);color:var(--accent);margin-bottom:0.75rem;}
+    .notice{background:var(--accent-bg);border:1px solid var(--accent-border);
+      border-radius:var(--radius);padding:0.85rem 1rem;font-size:13px;
+      color:#1e40af;margin-bottom:1.25rem;line-height:1.6;}
+    .warn-box{background:var(--warn-bg);border:1px solid var(--warn-border);
+      border-radius:var(--radius);padding:0.85rem 1rem;font-size:13px;
+      color:var(--warn);margin-bottom:1rem;display:none;}
+    .warn-box.visible{display:block;}
+    .check-row{display:flex;align-items:flex-start;gap:10px;margin-bottom:1rem;}
+    .check-row input[type=checkbox]{width:16px;height:16px;margin-top:2px;
+      flex-shrink:0;cursor:pointer;accent-color:var(--accent);}
+    .check-row label{font-size:14px;color:var(--text-2);cursor:pointer;line-height:1.55;}
+    .job-card{background:var(--surface-alt);border:1px solid var(--border);
+      border-radius:var(--radius);padding:1.1rem 1.25rem;margin-bottom:1.25rem;}
+    .job-card h3{font-size:16px;font-weight:700;margin-bottom:2px;}
+    .job-code{font-size:12px;color:var(--text-3);margin-bottom:0.6rem;}
+    .job-card p{font-size:13px;color:var(--text-2);margin-bottom:0.5rem;}
+    .job-card strong{color:var(--text);}
+    .skills-row{display:flex;flex-wrap:wrap;gap:5px;margin-top:0.5rem;}
+    .skill{font-size:11px;padding:2px 9px;border-radius:99px;
+      background:var(--surface);border:1px solid var(--border);color:var(--text-2);}
+    .rules-card{border-left:3px solid var(--accent);padding-left:1rem;margin-bottom:1rem;}
+    .rules-card p{font-size:13px;color:var(--text-2);margin-bottom:0.4rem;}
+    .writing-card{background:var(--surface);border:1px solid var(--border);
+      border-radius:var(--radius-lg);overflow:hidden;margin-bottom:1.25rem;}
+    .writing-header{background:var(--surface-alt);border-bottom:1px solid var(--border);
+      padding:0.75rem 1.1rem;display:flex;align-items:center;justify-content:space-between;}
+    .writing-label{font-size:13px;font-weight:600;color:var(--text-2);}
+    .stats-row{display:flex;gap:1rem;align-items:center;}
+    .stat{font-size:12px;color:var(--text-3);}
+    .stat.ok{color:var(--success);font-weight:500;}
+    .stat.warn{color:var(--warn);font-weight:500;}
+    textarea#resp{width:100%;min-height:260px;padding:1.1rem 1.25rem;
+      font-family:'Inter',sans-serif;font-size:14px;line-height:1.8;color:var(--text);
+      border:none;outline:none;resize:vertical;background:var(--surface);}
+    .prog-wrap{padding:0.6rem 1.1rem;border-top:1px solid var(--border);
+      background:var(--surface-alt);display:flex;align-items:center;gap:10px;}
+    .prog-bar{flex:1;height:4px;background:var(--border);border-radius:99px;overflow:hidden;}
+    .prog-fill{height:100%;border-radius:99px;transition:width 0.3s,background 0.3s;}
+    .prog-lbl{font-size:12px;color:var(--text-3);white-space:nowrap;}
+    .timer-row{background:var(--surface);border:1px solid var(--border);
+      border-radius:var(--radius);padding:0.85rem 1rem;margin-bottom:1.25rem;
+      display:flex;align-items:center;justify-content:space-between;}
+    .timer-val{font-size:24px;font-weight:600;font-variant-numeric:tabular-nums;}
+    .timer-val.warn{color:var(--warn);}
+    .timer-note{font-size:11px;color:var(--text-3);margin-top:2px;}
+    .integrity{font-size:12px;color:var(--text-3);margin-bottom:1.5rem;
+      line-height:1.65;background:var(--surface-alt);border-radius:var(--radius);
+      padding:0.75rem 1rem;}
+    .btn{display:inline-flex;align-items:center;gap:6px;padding:10px 22px;
+      border-radius:var(--radius);font-size:14px;font-weight:500;cursor:pointer;
+      border:1px solid transparent;transition:background 0.15s;font-family:inherit;}
+    .btn-primary{background:var(--accent);color:#fff;width:100%;}
+    .btn-primary:hover{background:#1e40af;}
+    .btn-primary:disabled{opacity:0.4;pointer-events:none;}
+    .btn-secondary{background:var(--surface);color:var(--text);border-color:var(--border-strong);}
+    .btn-secondary:hover{background:var(--surface-alt);}
+    .done-wrap{text-align:center;padding:3rem 1rem;}
+    .done-icon{font-size:48px;margin-bottom:1rem;}
+    .done-title{font-size:22px;font-weight:600;margin-bottom:8px;}
+    .done-sub{color:var(--text-2);font-size:14px;}
+    .section-eyebrow{font-size:11px;font-weight:600;letter-spacing:0.07em;
+      text-transform:uppercase;color:var(--text-3);margin-bottom:4px;}
+    .section-title{font-size:20px;font-weight:600;letter-spacing:-0.01em;margin-bottom:4px;}
+    .section-sub{font-size:13px;color:var(--text-2);margin-bottom:1.25rem;}
+    hr.divider{border:none;border-top:1px solid var(--border);margin:1.25rem 0;}
+ 
+    /* ── MCQ styles ────────────────────────────────────────────────────── */
+    .mcq-progress{font-size:12px;color:var(--text-3);margin-bottom:1.25rem;
+      display:flex;justify-content:space-between;align-items:center;}
+    .mcq-bar{height:4px;background:var(--border);border-radius:99px;margin-bottom:1.5rem;}
+    .mcq-bar-fill{height:100%;background:var(--accent);border-radius:99px;transition:width 0.3s;}
+ 
+    .q-card{background:var(--surface);border:1px solid var(--border);
+      border-radius:var(--radius-lg);padding:1.25rem 1.5rem;margin-bottom:1rem;}
+    .q-num{font-size:11px;font-weight:600;color:var(--text-3);margin-bottom:6px;
+      letter-spacing:0.06em;text-transform:uppercase;}
+    .q-text{font-size:15px;font-weight:500;color:var(--text);margin-bottom:1rem;
+      line-height:1.55;}
+    .choice-list{display:flex;flex-direction:column;gap:8px;}
+    .choice-btn{display:flex;align-items:flex-start;gap:12px;padding:10px 14px;
+      background:var(--surface-alt);border:1.5px solid var(--border);
+      border-radius:var(--radius);cursor:pointer;text-align:left;font-family:inherit;
+      font-size:13.5px;color:var(--text-2);transition:background 0.1s,border-color 0.1s;
+      line-height:1.5;}
+    .choice-btn:hover{background:#f0f4ff;border-color:var(--accent-border);}
+    .choice-btn.selected{border-color:var(--accent);background:var(--accent-bg);color:var(--accent);}
+    .choice-btn.correct{border-color:#10b981;background:#ecfdf5;color:var(--success);}
+    .choice-btn.wrong{border-color:var(--danger-border);background:var(--danger-bg);color:var(--danger);}
+    .choice-letter{font-weight:700;flex-shrink:0;width:18px;}
+ 
+    .result-card{border-radius:var(--radius-lg);padding:1.5rem;text-align:center;
+      margin-bottom:1.25rem;}
+    .result-card.pass{background:var(--success-bg);border:1px solid var(--success-border);}
+    .result-card.fail{background:var(--danger-bg);border:1px solid var(--danger-border);}
+    .result-score{font-size:48px;font-weight:700;margin-bottom:4px;}
+    .result-score.pass{color:var(--success);}
+    .result-score.fail{color:var(--danger);}
+    .result-label{font-size:15px;font-weight:500;margin-bottom:8px;}
+    .result-sub{font-size:13px;color:var(--text-2);}
   </style>
 </head>
 <body>
-
+ 
 <header>
   <div class="header-inner">
-    <span class="logo">Hiring<span>Study</span></span>
-    <span style="display:flex;align-items:center;gap:1.5rem;">
-      <span style="font-size:13px;color:var(--text-3);" id="hdr"></span>
-      <span style="font-size:12px;color:var(--text-3);letter-spacing:0.01em;">Designed by <strong style="color:var(--text-2);font-weight:500;">Owen Nguyen</strong></span>
-    </span>
+    <span class="logo">DePauw<span>Study</span></span>
+    <span style="font-size:13px;color:var(--text-3);" id="hdr-right">Writing Study</span>
   </div>
 </header>
-
+ 
 <div class="progress-wrap">
-  <div class="progress-meta"><span id="prog-lbl">Getting started</span><span id="prog-pct"></span></div>
-  <div class="progress-bar"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
+  <div class="step-label">
+    <span id="step-label">Step 1 of 5</span>
+    <span id="step-pct"></span>
+  </div>
+  <div class="progress-bar"><div class="progress-fill" id="prog" style="width:0%"></div></div>
 </div>
-
+ 
 <div class="shell">
-
-  <div class="screen active" id="s-intro">
-    <div class="intro-card">
-      <h1>Candidate Evaluation Study</h1>
-      <p>You will review <strong>8 job applicants</strong> one at a time for various analyst and professional roles. Each applicant has two steps:</p>
-      <ul>
-        <li><strong>Step 1: Credentials.</strong> Review the applicant's background and rate their qualifications.</li>
-        <li><strong>Step 2: Writing sample.</strong> Read their cover letter and answer questions. Credentials will not be visible during this step.</li>
-      </ul>
-      <p>Please read each section carefully before moving on.</p>
-      <div class="notice">&#9432;&nbsp; There are no right or wrong answers. We are interested in your genuine professional judgment. This survey takes approximately 20 minutes.</div>
-      <button class="btn btn-primary" onclick="start()">Start &rarr;</button>
-    </div>
+ 
+<!-- ══ A.0 CONSENT ════════════════════════════════════════════════════════════ -->
+<div class="screen active" id="s-consent">
+  <p class="section-eyebrow">A.0</p>
+  <h1 class="section-title">Consent &amp; Study Description</h1>
+  <p class="section-sub">Please read carefully before continuing.</p>
+  <div class="card">
+    <div class="badge">DePauw University — Research Study</div>
+    <h3>What this is</h3>
+    <p>You are helping build materials for a research study at DePauw University on how job application writing is evaluated. We are collecting authentic, human-written responses to a common job application question.</p>
+    <hr class="divider"/>
+    <h3>What we will do with your writing</h3>
+    <p>Your response will be used as research material. It may be lightly edited, reformatted, or paired with fictional applicant details (a made-up name, school, and work history) before being shown to study participants who will evaluate it. A de-identified copy may be posted in a public research archive when the study is published. Your identity will never be attached to your text.</p>
+    <hr class="divider"/>
+    <h3>What we are not doing</h3>
+    <p>This is not a real job application. No employer will see this. There is no hiring decision attached to it.</p>
+    <hr class="divider"/>
+    <h3>Time and compensation</h3>
+    <p>About 15–20 minutes. Compensation will be provided via Prolific.</p>
+    <hr class="divider"/>
+    <h3>Your rights</h3>
+    <p>Participation is voluntary. You may stop at any point without penalty. Questions: contact the research team via Prolific.</p>
   </div>
-
-  <div class="screen" id="s-creds">
-    <p class="eyebrow" id="c-eye"></p>
-    <h2 class="screen-title">Review Credentials</h2>
-    <p class="screen-sub">Read the applicant's background carefully. You will <strong>not</strong> be able to refer back to this during the writing evaluation.</p>
-    <div class="cred-notice">&#9432;&nbsp; Focus on qualifications on this page. The writing sample comes next.</div>
-    <div class="cred-card">
-      <div class="cred-card-header">
-        <div class="cand-name" id="c-name"></div>
-        <div class="cand-subrole" id="c-sub"></div>
-      </div>
-      <div id="c-body"></div>
-    </div>
-    <div class="q-section">
-      <p class="q-label">Based on these credentials alone, how qualified is this applicant?</p>
-      <p class="q-hint">1 = Not at all qualified &nbsp;&middot;&nbsp; 7 = Extremely qualified</p>
-      <div class="rating-btns" id="cred-r"></div>
-      <div class="rating-scale-labels"><span>Not at all</span><span>Extremely qualified</span></div>
-    </div>
-    <div class="nav-row">
-      <span></span>
-      <span class="nav-center" id="c-nav"></span>
-      <button class="btn btn-primary" onclick="toWriting()">Continue to writing sample &rarr;</button>
-    </div>
+  <div class="check-row">
+    <input type="checkbox" id="consent-check" onchange="document.getElementById('consent-btn').disabled=!this.checked"/>
+    <label for="consent-check">I have read the above and agree to participate in this study.</label>
   </div>
-
-  <div class="screen" id="s-writing">
-    <p class="eyebrow" id="w-eye"></p>
-    <h2 class="screen-title">Writing Sample Evaluation</h2>
-    <p class="screen-sub">Credentials are no longer visible. Evaluate based on writing only.</p>
-    <div class="letter-card">
-      <div class="letter-card-header"><span class="letter-lbl" id="w-role"></span></div>
-      <div class="letter-body">
-        <div class="letter-name" id="w-name"></div>
-        <div class="letter-meta" id="w-meta"></div>
-        <div class="letter-salutation">Dear Hiring Manager,</div>
-        <div id="w-paras"></div>
-      </div>
-    </div>
-    <div class="q-section">
-      <p class="q-label">Q1. Would you advance this applicant to a phone screen?</p>
-      <div class="choice-row">
-        <button class="choice-btn" id="q1y" onclick="selQ1('yes')"><span class="radio-dot"></span>Yes, advance</button>
-        <button class="choice-btn" id="q1n" onclick="selQ1('no')"><span class="radio-dot"></span>No, pass</button>
-      </div>
-    </div>
-    <div class="q-section">
-      <p class="q-label">Q2. Rate the hireability of this applicant based on their writing.</p>
-      <p class="q-hint">1 = Definitely would not advance &nbsp;&middot;&nbsp; 7 = Definitely would advance</p>
-      <div class="rating-btns" id="q2-r"></div>
-      <div class="rating-scale-labels"><span>Would not advance</span><span>Would advance</span></div>
-    </div>
-    <div class="q-section">
-      <p class="q-label">Q3. How would you describe the overall quality of this writing?</p>
-      <div class="pill-row" id="q3-r"></div>
-    </div>
-    <div class="q-section">
-      <p class="q-label">Q4. Do you think this writing was produced or polished using AI tools?</p>
-      <div class="pill-row" id="q4-r"></div>
-    </div>
-    <div class="q-section">
-      <p class="q-label">Q5. How confident are you in your answer to Q4?</p>
-      <div class="pill-row" id="q5-r"></div>
-    </div>
-    <div class="nav-row">
-      <button class="btn btn-secondary" onclick="back()">&#8592; Back</button>
-      <span class="nav-center" id="w-nav"></span>
-      <button class="btn btn-primary" id="next-btn" onclick="nextStep()">Next applicant &rarr;</button>
-    </div>
-  </div>
-
-  <div class="screen" id="s-done">
-    <div class="done-card">
-      <div class="done-icon">&#10003;</div>
-      <h2 class="done-title">Thank you!</h2>
-      <p class="done-sub">Your responses have been recorded. Here is a summary of your decisions.</p>
-      <div class="stats" id="done-stats"></div>
-      <div class="divider"></div>
-      <p class="debrief"><strong>Study debrief:</strong> This survey is part of research on how hiring professionals evaluate candidates. Some applicants' writing was produced with AI assistance; others wrote without it. Candidates came from both domestic U.S. and international backgrounds with equivalent qualifications. Your responses help us understand whether writing style and candidate origin influence hiring decisions.</p>
-      <button class="btn btn-secondary" onclick="restart()">&#8635; Take it again</button>
-    </div>
-  </div>
-
+  <button class="btn btn-primary" id="consent-btn" disabled onclick="goTo('s-position')">Continue →</button>
 </div>
-
-<footer style="border-top:1px solid var(--border);background:var(--surface);margin-top:4rem;padding:1.25rem 0;">
-  <div style="max-width:760px;margin:0 auto;padding:0 1.25rem;display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;">
-    <span style="font-size:12px;color:var(--text-3);">&#169; 2026 HiringStudy &nbsp;&middot;&nbsp; Research purposes only &nbsp;&middot;&nbsp; Responses are anonymous</span>
-    <span style="font-size:12px;color:var(--text-3);">Designed by <strong style="color:var(--text-2);font-weight:500;">Owen Nguyen</strong> &nbsp;&middot;&nbsp; Contact: <a href="mailto:anhl.nguyenwork@gmail.com" style="color:var(--accent);text-decoration:none;font-weight:500;">anhl.nguyenwork@gmail.com</a></span>
+ 
+<!-- ══ A.1 THE POSITION ═══════════════════════════════════════════════════════ -->
+<div class="screen" id="s-position">
+  <p class="section-eyebrow">A.1</p>
+  <h1 class="section-title">The Position</h1>
+  <p class="section-sub">Read the posting carefully. You will answer comprehension questions about it next.</p>
+  <div class="job-card">
+    <h3>Human Resources Specialist</h3>
+    <p class="job-code">O*NET-SOC 13-1071.00</p>
+    <p><strong>Position summary:</strong> Recruit, screen, interview, or place individuals within an organization. May perform other activities in multiple human resources areas.</p>
+    <p><strong>Common titles:</strong> HR Coordinator, HR Generalist, HR Analyst, Corporate Recruiter, Human Resources Representative, Employment Representative, Personnel Analyst.</p>
+    <p><strong>Level:</strong> Entry-level. Open to candidates with 0–2 years of professional experience. Bachelor's degree required; HR-specific experience preferred but not required.</p>
+    <p><strong>Skills emphasized:</strong></p>
+    <div class="skills-row">
+      <span class="skill">Speaking</span><span class="skill">Active Listening</span>
+      <span class="skill">Reading Comprehension</span><span class="skill">Writing</span>
+      <span class="skill">Critical Thinking</span><span class="skill">Social Perceptiveness</span>
+      <span class="skill">Service Orientation</span><span class="skill">Judgment &amp; Decision Making</span>
+      <span class="skill">Coordination</span><span class="skill">Time Management</span>
+    </div>
   </div>
-</footer>
-
+  <div class="notice">&#9432;&nbsp; Read the posting thoroughly. The next page will test your understanding before you can continue to the writing task.</div>
+  <button class="btn btn-primary" onclick="goTo('s-mcq')">I have read the posting — Take Comprehension Check →</button>
+</div>
+ 
+<!-- ══ A.1.5 COMPREHENSION CHECK (MCQ) ═══════════════════════════════════════ -->
+<div class="screen" id="s-mcq">
+  <p class="section-eyebrow">A.1.5 — Comprehension Check</p>
+  <h1 class="section-title">Reading Comprehension</h1>
+  <p class="section-sub">Answer all 15 questions based on the job posting you just read. You must score 80% or higher (12 out of 15) to continue. Use only what you read — no outside knowledge needed.</p>
+ 
+  <div class="mcq-bar"><div class="mcq-bar-fill" id="mcq-bar" style="width:0%"></div></div>
+ 
+  <div id="mcq-questions"></div>
+ 
+  <button class="btn btn-primary" id="mcq-submit-btn" disabled onclick="submitMCQ()">
+    Submit Answers
+  </button>
+</div>
+ 
+<!-- ══ MCQ RESULT ══════════════════════════════════════════════════════════════ -->
+<div class="screen" id="s-mcq-result">
+  <p class="section-eyebrow">A.1.5 — Result</p>
+  <h1 class="section-title" id="result-title">Comprehension Check Result</h1>
+  <div class="result-card" id="result-card">
+    <div class="result-score" id="result-score"></div>
+    <div class="result-label" id="result-label"></div>
+    <div class="result-sub" id="result-sub"></div>
+  </div>
+  <div id="result-breakdown" style="margin-bottom:1.25rem;"></div>
+  <button class="btn btn-primary" id="result-btn" onclick="handleResultBtn()"></button>
+</div>
+ 
+<!-- ══ A.2 + A.3 QUESTION & RULES ════════════════════════════════════════════ -->
+<div class="screen" id="s-question">
+  <p class="section-eyebrow">A.2 + A.3</p>
+  <h1 class="section-title">The Question &amp; Rules</h1>
+  <p class="section-sub">Read the question and all rules before writing your response.</p>
+  <div class="card" style="background:var(--accent-bg);border-color:var(--accent-border);">
+    <h3 style="color:var(--accent);">The Question</h3>
+    <p style="font-size:15px;font-weight:500;color:var(--text);">"Explain why you are a good fit for this position based on your past experience."</p>
+    <p style="margin-top:0.5rem;">Answer as if you were applying to the HR Specialist position above, as an early-career candidate — a current senior, recent graduate, or someone in their first year or two of work.</p>
+    <p><strong>Write about your own real experiences.</strong> Jobs, internships, campus roles, volunteer work, group projects, athletics, part-time work — anything where you built a skill this role calls for. Do not invent accomplishments.</p>
+  </div>
+  <div class="card">
+    <h3>Rules — read all of these</h3>
+    <div class="rules-card">
+      <p><strong>Length:</strong> 250–350 words. The box will not accept fewer than 225 or more than 400.</p>
+    </div>
+    <div class="rules-card">
+      <p><strong>Format rules:</strong></p>
+      <ul>
+        <li>Continuous prose only — no bullet points, no headings, no numbered lists</li>
+        <li>No greeting and no sign-off — do not write "Dear Hiring Manager" or "Sincerely." Start with your first sentence of substance</li>
+        <li>Be specific — include at least two concrete examples with real detail: what the situation was, what you did, what happened. Where you can, put a number on it</li>
+        <li>Write it once, the way you'd actually send it — we want your natural writing voice</li>
+      </ul>
+    </div>
+    <div class="rules-card" style="border-color:var(--danger);">
+      <p style="color:var(--danger);"><strong>No AI tools — this is required.</strong> Your response must be written entirely by you, without AI assistance of any kind. Please type directly into the box — do not paste.</p>
+    </div>
+  </div>
+  <button class="btn btn-primary" onclick="goTo('s-write')">I have read the rules — Start Writing →</button>
+</div>
+ 
+<!-- ══ A.4 + A.5 WRITING ══════════════════════════════════════════════════════ -->
+<div class="screen" id="s-write">
+  <p class="section-eyebrow">A.4 + A.5</p>
+  <h1 class="section-title">Write Your Response</h1>
+  <p class="section-sub">250–350 words. No AI tools. Type directly — do not paste.</p>
+  <!-- Collapsible rules reference -->
+  <div style="margin-bottom:1.25rem;">
+    <button onclick="toggleRules()" id="rules-toggle-btn"
+      style="width:100%;display:flex;align-items:center;justify-content:space-between;
+        padding:10px 16px;background:var(--surface);border:1.5px solid var(--border-strong);
+        border-radius:var(--radius);cursor:pointer;font-family:inherit;font-size:13.5px;
+        font-weight:500;color:var(--text-2);">
+      <span>📋 View writing rules</span>
+      <span id="rules-chevron" style="font-size:11px;color:var(--text-3);">▼ Show</span>
+    </button>
+    <div id="rules-panel" style="display:none;border:1.5px solid var(--border-strong);
+      border-top:none;border-radius:0 0 var(--radius) var(--radius);
+      background:var(--surface);padding:1.1rem 1.25rem;">
+      <div style="font-size:13px;color:var(--text-2);line-height:1.7;">
+        <p style="margin-bottom:0.6rem;"><strong>The Question:</strong> "Explain why you are a good fit for this position based on your past experience."</p>
+        <p style="margin-bottom:0.5rem;"><strong>Length:</strong> 250–350 words (hard limits: 225 min, 400 max).</p>
+        <p style="margin-bottom:0.4rem;"><strong>Format:</strong></p>
+        <ul style="padding-left:1.2rem;margin-bottom:0.5rem;">
+          <li style="margin-bottom:3px;">Continuous prose only — no bullet points, no headings, no numbered lists</li>
+          <li style="margin-bottom:3px;">No greeting and no sign-off — start with your first sentence of substance</li>
+          <li style="margin-bottom:3px;">Include at least two concrete examples with real detail and numbers where possible</li>
+          <li style="margin-bottom:3px;">Write in your natural voice — do not rewrite eight times</li>
+        </ul>
+        <p style="color:var(--danger);font-weight:500;">No AI tools of any kind. Type directly — do not paste.</p>
+      </div>
+    </div>
+  </div>
+ 
+  <div class="warn-box" id="paste-warn">⚠️ <strong>Pasting is not allowed.</strong> Please type your response directly into the box.</div>
+  <div class="warn-box" id="focus-warn">⚠️ You navigated away from this page. Please stay on this tab while writing. <span id="focus-count"></span></div>
+  <div class="warn-box" id="speed-warn" style="background:var(--danger-bg);border-color:var(--danger-border);color:var(--danger);">🚫 <strong>Unusually fast text input detected.</strong> Your response has been flagged for review.</div>
+  <div class="timer-row">
+    <div>
+      <div style="font-size:13px;color:var(--text-2);">Time elapsed</div>
+      <div class="timer-note">Minimum 10 minutes required before submitting</div>
+    </div>
+    <div style="text-align:right;">
+      <div class="timer-val" id="timer">0:00</div>
+      <div class="timer-note" id="timer-status">Submit unlocks at 10:00</div>
+    </div>
+  </div>
+  <div class="writing-card">
+    <div class="writing-header">
+      <span class="writing-label">Your Response</span>
+      <div class="stats-row">
+        <span class="stat" id="wc-label">0 words</span>
+        <span class="stat" id="tab-label"></span>
+      </div>
+    </div>
+    <textarea id="resp" placeholder="Start writing here. No greeting, no sign-off, continuous prose, 250–350 words..." spellcheck="true" autocomplete="off"></textarea>
+    <div class="prog-wrap">
+      <div class="prog-bar"><div class="prog-fill" id="wc-bar" style="width:0%;background:#e5e7eb;"></div></div>
+      <span class="prog-lbl" id="wc-prog-lbl">0 / 250 words minimum</span>
+    </div>
+  </div>
+  <div class="card" style="margin-bottom:1.25rem;">
+    <div class="check-row" style="margin-bottom:0.5rem;">
+      <input type="checkbox" id="ai-check" onchange="checkSubmit()"/>
+      <label for="ai-check">I wrote this response entirely myself. I did not use ChatGPT, Grammarly, or any other AI writing or editing tool at any point.</label>
+    </div>
+    <p style="font-size:12px;color:var(--text-3);margin-top:0.5rem;">If you did use one — even a little — please tell us here:</p>
+    <textarea id="ai-disclosure" rows="2" style="width:100%;padding:8px;font-family:inherit;font-size:13px;border:1px solid var(--border);border-radius:var(--radius);resize:none;margin-top:6px;" placeholder="Optional: describe any AI tool use here..."></textarea>
+  </div>
+  <div class="integrity">This task monitors paste events, tab switches, and typing speed as data-quality checks. We do not record your screen or keystrokes.</div>
+  <button class="btn btn-primary" id="submit-btn" disabled onclick="submitResponse()">Submit Response</button>
+</div>
+ 
+<!-- ══ DONE ════════════════════════════════════════════════════════════════════ -->
+<div class="screen" id="s-done">
+  <div class="done-wrap">
+    <div class="done-icon">&#10003;</div>
+    <h2 class="done-title">Thank you for your contribution</h2>
+    <p class="done-sub">Your response has been recorded. Please return to Prolific to complete your submission.</p>
+  </div>
+</div>
+ 
+</div>
+ 
 <script>
-const SHEETS_URL = 'YOUR_APPS_SCRIPT_URL_HERE';
-const APPLICANTS = [
+const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbwBQCUicwNlhIC4KUKm0aWbnpPPM8kvvqNtXbzy5ulM2VbmJ249_37Yg1byOupMRNlonQ/exec';
+ 
+// ── MCQ data — 15 questions about the HR Specialist posting ──────────────────
+const QUESTIONS = [
   {
-    "id": "C1",
-    "treatment": "human",
-    "origin": "domestic",
-    "role": "Actuarial Analyst",
-    "company": "Pinnacle Risk Advisors",
-    "cred": {
-      "name": "Marcus Webb",
-      "location": "Detroit, MI",
-      "edu": "University of Michigan-Dearborn  -  B.S. Mathematics, 2026",
-      "exp": "Actuarial Intern  -  Auto-Owners Insurance (Summer 2025)",
-      "gpa": "3.5",
-      "visa": false,
-      "extra": "SOA Exam P Passed · IBM Data Science Professional Certificate · R Programming (Coursera)"
-    },
-    "letter": {
-      "name": "Marcus Webb",
-      "location": "Detroit, MI",
-      "date": "July 9, 2026",
-      "role": "Actuarial Analyst  -  Pinnacle Risk Advisors",
-      "paras": [
-        "I am writing to apply for the Actuarial Analyst position at Pinnacle Risk Advisors. What drew me specifically to this role was the focus on property and casualty loss modeling, because that is the area of actuarial work I find most concrete and important. My dad spent 22 years as an insurance claims adjuster in Detroit and I grew up watching him come home after storms and spend evenings on the phone explaining to people what their policy actually covered. I did not understand then what the math looked like behind those decisions. When I figured that out in college, I wanted to do the math side of what he did.",
-        "Last summer I interned at Auto-Owners Insurance on their reserving team. My main project was building a development triangle in Excel and R for a commercial auto liability line, updating the expected loss factors and comparing our projection against the prior actuarial estimate. This was the first time I had worked with real loss data and it was harder to get clean than I expected. I had to pull records from two separate systems and reconcile them before I could even start the triangle. My supervisor walked me through what the discrepancies usually meant and how to document the judgment calls. By the end of the summer I had a working triangle that the senior actuary used as a starting point for the year-end reserve review, which was something I did not expect to happen with intern work.",
-        "Outside of the internship I passed SOA Exam P in November. I also completed the IBM Data Science Professional Certificate and an R Programming course on Coursera over the past two semesters because I noticed that most of the actuarial work at Auto-Owners involved a lot of data cleaning before any modeling could happen, and I wanted to get faster at that part.",
-        "I am finishing my Mathematics degree at Michigan-Dearborn with a 3.5 GPA and I plan to sit for Exam FM this fall. I am looking for a role where I can keep working on reserving or pricing problems with people who take the technical side seriously. I would really appreciate the chance to talk more about this position at Pinnacle."
-      ]
-    }
+    q: "What is the main job of an HR Specialist based on the posting?",
+    choices: [
+      "Managing company budgets and expenses",
+      "Recruiting, screening, and interviewing job candidates",
+      "Designing marketing campaigns",
+      "Writing software for HR systems"
+    ],
+    correct: 1
   },
   {
-    "id": "C2",
-    "treatment": "ai",
-    "origin": "domestic",
-    "role": "Actuarial Analyst",
-    "company": "Pinnacle Risk Advisors",
-    "cred": {
-      "name": "Marcus Webb",
-      "location": "Detroit, MI",
-      "edu": "University of Michigan-Dearborn  -  B.S. Mathematics, 2026",
-      "exp": "Actuarial Intern  -  Auto-Owners Insurance (Summer 2025)",
-      "gpa": "3.5",
-      "visa": false,
-      "extra": "SOA Exam P Passed · IBM Data Science Professional Certificate · R Programming (Coursera)"
-    },
-    "letter": {
-      "name": "Marcus Webb",
-      "location": "Detroit, MI",
-      "date": "July 9, 2026",
-      "role": "Actuarial Analyst  -  Pinnacle Risk Advisors",
-      "paras": [
-        "I am writing to apply for the Actuarial Analyst position at Pinnacle Risk Advisors. The firm's focus on property and casualty loss modeling is what drew me to this role specifically. My interest in actuarial science developed through a direct and personal connection to insurance work: my father spent over two decades as a claims adjuster in Detroit, and my early exposure to how coverage decisions affected families after losses shaped my understanding of what rigorous risk quantification is ultimately for. Pinnacle's emphasis on reserve analysis and pricing support aligns closely with the work I developed during my internship at Auto-Owners Insurance.",
-        "During my internship on Auto-Owners' reserving team, I built a commercial auto liability development triangle in Excel and R, updating expected loss development factors and comparing the resulting reserve projection against the prior actuarial estimate. The work required reconciling loss records from two separate systems before the triangle could be constructed, a process that introduced me to the data quality challenges that precede most actuarial analysis in practice. My supervisor helped me understand the documentation standards required for judgment calls within the reconciliation process. The completed triangle was incorporated by the senior actuary as a starting point for the year-end reserve review.",
-        "To strengthen my technical foundation beyond the internship, I passed SOA Exam P in November 2025 and completed the IBM Data Science Professional Certificate along with a Coursera R Programming course. The data science training was motivated directly by what I observed at Auto-Owners: a significant portion of actuarial work involves data preparation before any modeling begins, and I wanted to improve my efficiency at that stage.",
-        "I will complete my B.S. in Mathematics at Michigan-Dearborn with a 3.5 GPA in May 2026 and plan to sit for Exam FM in the fall. I am seeking a role focused on reserving or pricing analysis within a technically rigorous environment. I would welcome the opportunity to discuss this position with you."
-      ]
-    }
+    q: "Is this position entry-level or senior-level?",
+    choices: [
+      "Senior-level, requiring 10+ years",
+      "Mid-level, requiring 5–8 years",
+      "Entry-level, open to candidates with 0–2 years",
+      "Executive-level only"
+    ],
+    correct: 2
   },
   {
-    "id": "C3",
-    "treatment": "human",
-    "origin": "international",
-    "role": "Data Analyst",
-    "company": "Meridian Analytics Group",
-    "cred": {
-      "name": "Linh Tran",
-      "location": "Champaign, IL (visa sponsorship required)",
-      "edu": "University of Illinois Urbana-Champaign  -  B.S. Statistics, 2026",
-      "exp": "Data Analytics Intern  -  ShipBob Chicago (Summer 2025)",
-      "gpa": "3.5",
-      "visa": true,
-      "extra": "Google Data Analytics Certificate · Tableau Desktop Specialist · Python for Data Science (LinkedIn Learning)"
-    },
-    "letter": {
-      "name": "Linh Tran",
-      "location": "Champaign, IL (visa sponsorship required)",
-      "date": "July 9, 2026",
-      "role": "Data Analyst  -  Meridian Analytics Group",
-      "paras": [
-        "I am applying for the Data Analyst position at Meridian Analytics Group. I started building spreadsheets when I was in high school in Ho Chi Minh City because my mother ran a small retail shop and tracked everything in a handwritten notebook. She could not easily tell which products were selling and which ones were tying up cash on the shelf. I started building her a simple Excel tracker with formulas and eventually a pivot table that showed her monthly margin by product category. She told me it changed how she ordered inventory. That was the first time I understood what data work could actually do for someone, and it is the reason I ended up studying statistics.",
-        "Last summer I interned at ShipBob in Chicago on their operations analytics team. My main project was building a weekly demand forecast model in Python for a subset of their SKUs that had been flagged for high stockout frequency. I used historical order data going back two years and built a simple moving average model with a seasonal adjustment layer. It was not a sophisticated machine learning approach, but it reduced the average forecast error for those SKUs from about 18% to 11% over the last six weeks of my internship. What I found most interesting about the project was not the model itself but understanding why the error had been so high in the first place, which turned out to be partly a data quality issue in how returns were being recorded.",
-        "I completed the Google Data Analytics Certificate and a LinkedIn Learning Python for Data Science course before the internship to make sure I had a solid foundation going in. I also hold the Tableau Desktop Specialist certification, which I used to build the monitoring dashboard that displayed the forecast accuracy metrics for the team.",
-        "I am finishing my Statistics degree at Illinois with a 3.5 GPA this May. I am happy to discuss visa sponsorship at any point. I would love the chance to talk more about this role at Meridian."
-      ]
-    }
+    q: "Does this job require a college degree?",
+    choices: [
+      "No degree is needed",
+      "A master's degree is required",
+      "Yes, a bachelor's degree is required",
+      "Only a professional certification is needed"
+    ],
+    correct: 2
   },
   {
-    "id": "C4",
-    "treatment": "ai",
-    "origin": "international",
-    "role": "Data Analyst",
-    "company": "Meridian Analytics Group",
-    "cred": {
-      "name": "Linh Tran",
-      "location": "Champaign, IL (visa sponsorship required)",
-      "edu": "University of Illinois Urbana-Champaign  -  B.S. Statistics, 2026",
-      "exp": "Data Analytics Intern  -  ShipBob Chicago (Summer 2025)",
-      "gpa": "3.5",
-      "visa": true,
-      "extra": "Google Data Analytics Certificate · Tableau Desktop Specialist · Python for Data Science (LinkedIn Learning)"
-    },
-    "letter": {
-      "name": "Linh Tran",
-      "location": "Champaign, IL (visa sponsorship required)",
-      "date": "July 9, 2026",
-      "role": "Data Analyst  -  Meridian Analytics Group",
-      "paras": [
-        "I am writing to apply for the Data Analyst position at Meridian Analytics Group. My interest in data analysis developed early and from a practical context: growing up in Ho Chi Minh City, I built inventory tracking spreadsheets for my mother's retail shop after recognizing that her handwritten records made it difficult to identify which products were generating margin versus tying up capital. Seeing how structured data changed her purchasing decisions gave me a concrete understanding of what analytical work can accomplish, and it shaped the direction of my academic and professional development. Meridian's focus on operational and business analytics aligns directly with the type of applied work I find most meaningful.",
-        "During my internship at ShipBob in Chicago, I developed a weekly demand forecast model in Python for a set of high-stockout SKUs using two years of historical order data. The model incorporated a moving average baseline with a seasonal adjustment layer and reduced average forecast error for the target SKUs from approximately 18% to 11% over the final six weeks of my internship. A significant part of the project involved diagnosing the source of prior forecast inaccuracies, which I traced to a data quality issue in how product returns were being categorized in the order management system. I built a Tableau dashboard to monitor forecast accuracy metrics on an ongoing basis, which the analytics team continued using after my internship concluded.",
-        "Prior to the internship, I completed the Google Data Analytics Certificate and a LinkedIn Learning Python for Data Science course to establish a strong technical foundation for the role. I also hold the Tableau Desktop Specialist certification. These credentials, combined with the applied work at ShipBob, reflect my commitment to developing practical analytical skills alongside my Statistics degree.",
-        "I will complete my B.S. in Statistics at Illinois with a 3.5 GPA in May 2026. I am fully prepared to address visa sponsorship questions at any stage of the process. I would welcome the opportunity to discuss how my analytical background aligns with Meridian Analytics Group's needs."
-      ]
-    }
+    q: "Is prior HR experience required for this job?",
+    choices: [
+      "Yes, at least 3 years in HR is required",
+      "HR experience is preferred but not required",
+      "Only HR interns can apply",
+      "HR experience is not mentioned at all"
+    ],
+    correct: 1
   },
   {
-    "id": "C5",
-    "treatment": "human",
-    "origin": "domestic",
-    "role": "Management Consultant",
-    "company": "West Monroe Partners",
-    "cred": {
-      "name": "Jordan Hayes",
-      "location": "Indianapolis, IN",
-      "edu": "Indiana University  -  B.S. Business Analytics, 2026",
-      "exp": "Consulting Intern  -  Crowe LLP (Summer 2025)",
-      "gpa": "3.4",
-      "visa": false,
-      "extra": "Google Project Management Certificate · Toastmasters Club President · National Case Competition Participant"
-    },
-    "letter": {
-      "name": "Jordan Hayes",
-      "location": "Indianapolis, IN",
-      "date": "July 9, 2026",
-      "role": "Management Consultant  -  West Monroe Partners",
-      "paras": [
-        "I am applying for the Management Consultant position at West Monroe Partners. I grew up in a small town in southern Indiana and I was the first person in my family to attend a four-year university. I did not know what consulting was until my sophomore year when a friend dared me to enter a case competition with her because the winner got a gift card. We had no idea what we were doing in the first round. But I found that the structure of the problem, taking an ambiguous business situation and working through it systematically to a recommendation, was something I was genuinely good at and genuinely enjoyed. We ended up winning our regional. That competition is what put consulting on my radar and I have been working toward it since.",
-        "I interned at Crowe LLP last summer on an engagement for a regional hospital system in Indiana that was trying to reduce patient discharge delays. My job was to map the current discharge workflow by interviewing department coordinators, document the process in a flowchart, and identify where the bottlenecks were. I interviewed 14 people across five departments over three weeks. The thing I found was that most of the delay came from a single handoff between the nursing team and the case management team that did not have a standardized communication protocol. My project manager let me present that finding to the client's operations director, which was intimidating but went better than I expected. The client implemented a new handoff checklist based on our recommendation.",
-        "I completed the Google Project Management Certificate last fall and I serve as president of our campus Toastmasters chapter, which I joined specifically to get better at presenting analysis to people who are skeptical of it. That skill matters a lot in consulting and I wanted to practice it outside of class.",
-        "I am finishing my Business Analytics degree at Indiana University with a 3.4 GPA this May. West Monroe's focus on technology-enabled business transformation is the specific kind of consulting I want to do, because the problems tend to require both analytical rigor and change management. I would love to talk more about this role."
-      ]
-    }
+    q: "Which of the following is a skill mentioned in the job posting?",
+    choices: [
+      "Financial modeling",
+      "Active Listening",
+      "Graphic design",
+      "Database programming"
+    ],
+    correct: 1
   },
   {
-    "id": "C6",
-    "treatment": "ai",
-    "origin": "domestic",
-    "role": "Management Consultant",
-    "company": "West Monroe Partners",
-    "cred": {
-      "name": "Jordan Hayes",
-      "location": "Indianapolis, IN",
-      "edu": "Indiana University  -  B.S. Business Analytics, 2026",
-      "exp": "Consulting Intern  -  Crowe LLP (Summer 2025)",
-      "gpa": "3.4",
-      "visa": false,
-      "extra": "Google Project Management Certificate · Toastmasters Club President · National Case Competition Participant"
-    },
-    "letter": {
-      "name": "Jordan Hayes",
-      "location": "Indianapolis, IN",
-      "date": "July 9, 2026",
-      "role": "Management Consultant  -  West Monroe Partners",
-      "paras": [
-        "I am writing to apply for the Management Consultant position at West Monroe Partners. West Monroe's focus on technology-enabled business transformation is the specific type of consulting work I have been building toward, and the firm's reputation for rigorous analytical problem-solving combined with practical implementation support is what drew me to this application. My interest in consulting originated in a regional case competition during my sophomore year at Indiana University, where working through an ambiguous business problem to a structured recommendation revealed both a skill set and a direction I wanted to pursue.",
-        "During my internship at Crowe LLP, I supported an operational improvement engagement for a regional hospital system seeking to reduce patient discharge delays. My responsibilities included mapping the current discharge workflow through structured interviews with 14 coordinators across five departments, documenting the process, and identifying bottlenecks. The analysis revealed that the primary source of delay was an unstandardized handoff protocol between the nursing team and case management, a finding I presented directly to the client's operations director in the final meeting. The client subsequently implemented a handoff checklist based on our recommendation. This experience provided concrete exposure to the process analysis and stakeholder communication responsibilities central to consulting work at West Monroe's level of client engagement.",
-        "To develop the communication skills required to present analytical findings persuasively to skeptical audiences, I joined our campus Toastmasters chapter and currently serve as its president. I also completed the Google Project Management Certificate to strengthen my understanding of structured project delivery. Both reflect a deliberate effort to develop the non-technical dimensions of consulting alongside the analytical core of my Business Analytics degree.",
-        "I will complete my B.S. in Business Analytics at Indiana University with a 3.4 GPA in May 2026. I am looking for a role where analytical rigor and practical business impact reinforce each other. I would welcome the opportunity to discuss this position with you."
-      ]
-    }
+    q: "Which skill from the list below is NOT in the posting?",
+    choices: [
+      "Time Management",
+      "Critical Thinking",
+      "Budget Analysis",
+      "Writing"
+    ],
+    correct: 2
   },
   {
-    "id": "C7",
-    "treatment": "human",
-    "origin": "international",
-    "role": "Corporate Finance Analyst",
-    "company": "Apogee Financial Partners",
-    "cred": {
-      "name": "Yuna Park",
-      "location": "Ann Arbor, MI (visa sponsorship required)",
-      "edu": "University of Michigan  -  B.S. Finance and Statistics, 2026",
-      "exp": "Due Diligence Intern  -  Hanwha Q Cells Logistics (Seoul, Summer 2025)",
-      "gpa": "3.6",
-      "visa": true,
-      "extra": "Financial Modeling and Valuation (Coursera) · Bloomberg Market Concepts · Investment Club Analyst"
-    },
-    "letter": {
-      "name": "Yuna Park",
-      "location": "Ann Arbor, MI (visa sponsorship required)",
-      "date": "July 9, 2026",
-      "role": "Corporate Finance Analyst  -  Apogee Financial Partners",
-      "paras": [
-        "I am applying for the Corporate Finance Analyst position at Apogee Financial Partners. I came to finance without any obvious path to it. My father is a marine engineer at a shipyard in Busan and finance was not something that came up at home. In my second year at Pusan National University I enrolled in a corporate finance elective mostly because it fit my schedule, and I ended up spending most of that semester genuinely absorbed in how you value a company whose future looks uncertain. I transferred to the University of Michigan the next year partly because I wanted access to the kind of curriculum and professional opportunities that were harder to find in Korea at the undergraduate level. The reason this role at Apogee caught my attention is the focus on actual financial analysis supporting transactions, not just building and maintaining models.",
-        "Last summer I interned on the finance team at Hanwha Q Cells Logistics in Seoul, where I supported due diligence on two acquisition targets in the cold storage and freight forwarding segments. My main task was preparing financial summary memos and building peer benchmarking tables. What complicated the benchmarking was that two of the listed Korean comparables used different revenue recognition policies for long-term service contracts, which made the reported margin figures misleading when placed side by side. I had to go through each company's notes to the financial statements and adjust the numbers before the comparison was meaningful. My supervisor told me afterward that flagging that kind of issue early was exactly what the memo was supposed to do. The adjusted tables went into the final acquisition review materials for both targets.",
-        "At Michigan I work as an equity analyst in the student investment club, covering the industrials sector. I also completed a Financial Modeling and Valuation course on Coursera during the spring semester to build the three-statement modeling skills I wanted to bring into the internship and into a full-time role.",
-        "I am finishing my double major in Finance and Statistics at Michigan with a 3.6 GPA this May. I am prepared to discuss visa sponsorship at any point in the process. I would very much welcome a conversation about this position at Apogee."
-      ]
-    }
+    q: "What kind of work might an HR Specialist do beyond hiring?",
+    choices: [
+      "Nothing — the role is strictly about recruitment",
+      "Other activities across multiple human resources areas",
+      "Accounting and payroll only",
+      "Legal work for the company"
+    ],
+    correct: 1
   },
   {
-    "id": "C8",
-    "treatment": "ai",
-    "origin": "international",
-    "role": "Corporate Finance Analyst",
-    "company": "Apogee Financial Partners",
-    "cred": {
-      "name": "Yuna Park",
-      "location": "Ann Arbor, MI (visa sponsorship required)",
-      "edu": "University of Michigan  -  B.S. Finance and Statistics, 2026",
-      "exp": "Due Diligence Intern  -  Hanwha Q Cells Logistics (Seoul, Summer 2025)",
-      "gpa": "3.6",
-      "visa": true,
-      "extra": "Financial Modeling and Valuation (Coursera) · Bloomberg Market Concepts · Investment Club Analyst"
-    },
-    "letter": {
-      "name": "Yuna Park",
-      "location": "Ann Arbor, MI (visa sponsorship required)",
-      "date": "July 9, 2026",
-      "role": "Corporate Finance Analyst  -  Apogee Financial Partners",
-      "paras": [
-        "I am writing to apply for the Corporate Finance Analyst position at Apogee Financial Partners. The firm's emphasis on transaction-level financial analysis and company evaluation supporting advisory engagements is what drew me to this opening. My interest in corporate finance developed during an elective course at Pusan National University that prompted me to transfer to the University of Michigan to access a more rigorous analytical curriculum and professional development environment. Apogee's focus on applied financial analysis, rather than routine model maintenance, is the type of work I have been preparing for.",
-        "During my internship at Hanwha Q Cells Logistics in Seoul, I supported due diligence on two acquisition targets in the cold storage and freight forwarding segments by preparing financial summary memos and peer benchmarking analyses. A central challenge in the benchmarking work was identifying that two listed Korean comparables applied different revenue recognition policies for long-term service contracts, which produced misleading reported margin figures when compared directly. I traced the discrepancy through each company's notes to the financial statements, made the necessary adjustments, and rebuilt the benchmarking tables on a consistent basis. The adjusted tables were incorporated into the final acquisition review materials for both targets. This experience provided direct exposure to the financial statement analysis and due diligence documentation responsibilities described in this role.",
-        "As an equity analyst in the University of Michigan's student investment club, I cover the industrials sector and contribute company analysis to the club's active portfolio review process. To strengthen my modeling foundation, I completed a Financial Modeling and Valuation course on Coursera, which helped me build the three-statement and DCF skills I applied during the internship and intend to develop further in a full-time role.",
-        "I will complete my B.S. in Finance and Statistics at Michigan with a 3.6 GPA in May 2026. I hold the Bloomberg Market Concepts certification. I am fully prepared to discuss visa sponsorship at any stage of the process. I would welcome the opportunity to speak with someone at Apogee about this position."
-      ]
-    }
+    q: "Which of these is listed as a common job title for this role?",
+    choices: [
+      "Chief HR Officer",
+      "HR Business Partner",
+      "HR Coordinator",
+      "VP of People"
+    ],
+    correct: 2
+  },
+  {
+    q: "Which skill below is listed in the posting?",
+    choices: [
+      "Negotiation",
+      "Social Perceptiveness",
+      "Data Science",
+      "Public Relations"
+    ],
+    correct: 1
+  },
+  {
+    q: "How many years of experience does this posting say you need at most?",
+    choices: [
+      "5 years",
+      "10 years",
+      "2 years",
+      "No experience required"
+    ],
+    correct: 2
+  },
+  {
+    q: "Is 'Coordination' listed as one of the skills for this role?",
+    choices: [
+      "No, it is not mentioned",
+      "Yes, it is one of the emphasized skills",
+      "Only in senior HR roles",
+      "It depends on the job title"
+    ],
+    correct: 1
+  },
+  {
+    q: "Which of these is listed as an emphasized skill in the posting?",
+    choices: [
+      "Spreadsheet software",
+      "Judgment and Decision Making",
+      "Foreign language fluency",
+      "Physical fitness"
+    ],
+    correct: 1
+  },
+  {
+    q: "Could someone who just graduated from college apply to this job?",
+    choices: [
+      "No, they must have at least 3 years of work experience",
+      "Only if they majored in HR",
+      "Yes, because it is entry-level and open to those with 0–2 years",
+      "Only if they have a master's degree"
+    ],
+    correct: 2
+  },
+  {
+    q: "Which of the following best describes 'Service Orientation' in this job?",
+    choices: [
+      "Working in customer service at a restaurant",
+      "A skill listed in the posting related to how you serve and support others",
+      "A technical certification required for the role",
+      "The ability to drive company vehicles"
+    ],
+    correct: 1
+  },
+  {
+    q: "Based on the posting, what type of organization would hire an HR Specialist?",
+    choices: [
+      "Only technology companies",
+      "Only government agencies",
+      "Any organization that needs to recruit and manage people",
+      "Only companies with more than 10,000 employees"
+    ],
+    correct: 2
   }
 ];
-
-let order=[], idx=0, stage='creds', responses=[];
-let rid='r_'+Date.now()+'_'+Math.random().toString(36).slice(2,7), t0=Date.now();
-
-function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
-function cur(){return APPLICANTS[order[idx]];}
-function res(){return responses[idx];}
-function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');window.scrollTo(0,0);}
-
-function progress(){
-  const total=APPLICANTS.length*2, done=idx*2+(stage==='writing'?1:0), pct=Math.round(done/total*100);
-  document.getElementById('prog-fill').style.width=pct+'%';
-  document.getElementById('prog-pct').textContent=pct+'%';
-  document.getElementById('prog-lbl').textContent=`Applicant ${idx+1} of ${APPLICANTS.length}  -  ${stage==='creds'?'Step 1 of 2: Credentials':'Step 2 of 2: Writing'}`;
-  document.getElementById('hdr').textContent=`${idx+1} / ${APPLICANTS.length}`;
+ 
+// Shuffle answers while tracking correct index
+function shuffleChoices(q) {
+  const indexed = q.choices.map((c, i) => ({ text: c, isCorrect: i === q.correct }));
+  for (let i = indexed.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [indexed[i], indexed[j]] = [indexed[j], indexed[i]];
+  }
+  return indexed;
 }
-
-function start(){
-  order=shuffle([0,1,2,3,4,5,6,7]);
-  responses=APPLICANTS.map(()=>({credRating:null,q1:null,q2:null,q3:null,q4:null,q5:null}));
-  idx=0; stage='creds'; renderCreds(); show('s-creds');
+ 
+let shuffledQs = [];
+let userAnswers = [];
+let mcqPassed = false;
+ 
+function buildMCQ() {
+  shuffledQs = QUESTIONS.map(q => ({ ...q, shuffled: shuffleChoices(q) }));
+  userAnswers = new Array(QUESTIONS.length).fill(null);
+  const container = document.getElementById('mcq-questions');
+  container.innerHTML = '';
+ 
+  shuffledQs.forEach((q, qi) => {
+    const card = document.createElement('div');
+    card.className = 'q-card';
+    card.innerHTML = `
+      <div class="q-num">Question ${qi + 1} of ${QUESTIONS.length}</div>
+      <div class="q-text">${q.q}</div>
+      <div class="choice-list" id="choices-${qi}">
+        ${q.shuffled.map((c, ci) => `
+          <button class="choice-btn" id="choice-${qi}-${ci}" onclick="selectChoice(${qi}, ${ci})">
+            <span class="choice-letter">${'ABCD'[ci]}.</span>
+            <span>${c.text}</span>
+          </button>
+        `).join('')}
+      </div>`;
+    container.appendChild(card);
+  });
+  updateMCQProgress();
 }
-
-function renderCreds(){
-  stage='creds'; progress();
-  const a=cur(), c=a.cred;
-  document.getElementById('c-eye').textContent=`Applicant ${idx+1} of ${APPLICANTS.length}  -  Step 1 of 2`;
-  document.getElementById('c-name').textContent=c.name;
-  document.getElementById('c-sub').textContent=`Applying for: ${a.role} at ${a.company}`;
-  document.getElementById('c-nav').textContent=`${idx+1} of ${APPLICANTS.length}`;
-  document.getElementById('c-body').innerHTML=
-    cr('Location',c.location)+cr('Education',c.edu)+cr('Experience',c.exp)+
-    `<div class="cred-row"><div class="cred-lbl">GPA</div><div class="cred-val"><span class="badge badge-gpa">${c.gpa}</span></div></div>`+
-    `<div class="cred-row"><div class="cred-lbl">Visa</div><div class="cred-val">${c.visa?'<span class="badge badge-visa">Sponsorship required</span>':'<span class="badge badge-gpa">Not required</span>'}</div></div>`+
-    cr('Additional',c.extra);
-  const r=res();
-  document.getElementById('cred-r').innerHTML=[1,2,3,4,5,6,7].map(n=>`<button class="rating-btn ${r.credRating===n?'selected':''}" onclick="selCred(${n})">${n}</button>`).join('');
+ 
+function selectChoice(qi, ci) {
+  userAnswers[qi] = ci;
+  // Update button styles
+  document.querySelectorAll(`#choices-${qi} .choice-btn`).forEach((btn, i) => {
+    btn.classList.toggle('selected', i === ci);
+  });
+  updateMCQProgress();
 }
-
-function cr(l,v){return`<div class="cred-row"><div class="cred-lbl">${l}</div><div class="cred-val">${v}</div></div>`;}
-
-function selCred(n){res().credRating=n;document.querySelectorAll('#cred-r .rating-btn').forEach((b,i)=>b.classList.toggle('selected',i+1===n));}
-
-function toWriting(){show('s-writing');renderWriting();}
-
-function renderWriting(){
-  stage='writing'; progress();
-  const a=cur(), l=a.letter, r=res();
-  document.getElementById('w-eye').textContent=`Applicant ${idx+1} of ${APPLICANTS.length}  -  Step 2 of 2`;
-  document.getElementById('w-role').textContent=`Cover Letter  -  ${l.role}`;
-  document.getElementById('w-name').textContent=l.name;
-  document.getElementById('w-meta').textContent=`${l.location}   ·   ${l.date}`;
-  document.getElementById('w-paras').innerHTML=l.paras.map(p=>`<p class="letter-para">${p}</p>`).join('');
-  document.getElementById('w-nav').textContent=`${idx+1} of ${APPLICANTS.length}`;
-  document.getElementById('q1y').classList.toggle('selected',r.q1==='yes');
-  document.getElementById('q1n').classList.toggle('selected',r.q1==='no');
-  document.getElementById('q2-r').innerHTML=[1,2,3,4,5,6,7].map(n=>`<button class="rating-btn ${r.q2===n?'selected':''}" onclick="selR('q2',${n})">${n}</button>`).join('');
-  pills('q3-r',['Poor','Below average','Average','Above average','Excellent'],'q3',r.q3);
-  pills('q4-r',['Definitely human-written','Probably human-written','Not sure','Probably AI-assisted','Definitely AI-assisted'],'q4',r.q4);
-  pills('q5-r',['Not at all confident','Slightly confident','Moderately confident','Very confident','Extremely confident'],'q5',r.q5);
-  document.getElementById('next-btn').textContent=idx===APPLICANTS.length-1?'Submit':'Next applicant →';
+ 
+function updateMCQProgress() {
+  const answered = userAnswers.filter(a => a !== null).length;
+  const pct = (answered / QUESTIONS.length) * 100;
+  document.getElementById('mcq-bar').style.width = pct + '%';
+  document.getElementById('mcq-submit-btn').disabled = answered < QUESTIONS.length;
 }
-
-function pills(id,opts,key,val){document.getElementById(id).innerHTML=opts.map(o=>`<button class="pill-btn ${val===o?'selected':''}" onclick="selP('${key}','${o}')">${o}</button>`).join('');}
-
-function selQ1(v){res().q1=v;document.getElementById('q1y').classList.toggle('selected',v==='yes');document.getElementById('q1n').classList.toggle('selected',v==='no');}
-function selR(key,n){res()[key]=n;document.querySelectorAll(`#${key==='q2'?'q2-r':'cred-r'} .rating-btn`).forEach((b,i)=>b.classList.toggle('selected',i+1===n));}
-function selP(key,val){res()[key]=val;document.querySelectorAll(`#${key}-r .pill-btn`).forEach(b=>b.classList.toggle('selected',b.textContent===val));}
-
-function back(){show('s-creds');renderCreds();}
-
-async function nextStep(){
-  if(idx===APPLICANTS.length-1){await submit();showDone();}
-  else{idx++;show('s-creds');renderCreds();}
+ 
+function submitMCQ() {
+  let correct = 0;
+  shuffledQs.forEach((q, qi) => {
+    const chosen = userAnswers[qi];
+    if (chosen !== null && q.shuffled[chosen].isCorrect) correct++;
+  });
+ 
+  const score = correct;
+  const pct = Math.round((correct / QUESTIONS.length) * 100);
+  mcqPassed = pct >= 80;
+ 
+  const card = document.getElementById('result-card');
+  const scoreEl = document.getElementById('result-score');
+  const labelEl = document.getElementById('result-label');
+  const subEl   = document.getElementById('result-sub');
+  const btn     = document.getElementById('result-btn');
+  const title   = document.getElementById('result-title');
+ 
+  scoreEl.textContent = `${correct} / ${QUESTIONS.length}`;
+  scoreEl.className = `result-score ${mcqPassed ? 'pass' : 'fail'}`;
+  card.className = `result-card ${mcqPassed ? 'pass' : 'fail'}`;
+ 
+  if (mcqPassed) {
+    title.textContent = 'You Passed!';
+    labelEl.textContent = `${pct}% — Comprehension check passed`;
+    subEl.textContent = 'You demonstrated sufficient understanding of the job posting. You may now proceed to the writing task.';
+    btn.textContent = 'Continue to Writing Task →';
+    btn.className = 'btn btn-primary';
+  } else {
+    title.textContent = 'Below Passing Score';
+    labelEl.textContent = `${pct}% — Minimum required: 80%`;
+    subEl.textContent = 'You did not reach the required score. Please re-read the job posting carefully and try again from the beginning.';
+    btn.textContent = 'Start Over from Beginning';
+    btn.className = 'btn btn-primary';
+    btn.style.background = '#dc2626';
+  }
+ 
+  // Show breakdown
+  const breakdown = document.getElementById('result-breakdown');
+  breakdown.innerHTML = `
+    <div class="card">
+      <h3 style="margin-bottom:0.75rem;">Question Review</h3>
+      ${shuffledQs.map((q, qi) => {
+        const chosen = userAnswers[qi];
+        const isCorrect = chosen !== null && q.shuffled[chosen].isCorrect;
+        const correctChoice = q.shuffled.find(c => c.isCorrect);
+        return `<div style="padding:8px 0;border-bottom:1px solid var(--border);font-size:13px;">
+          <div style="color:${isCorrect ? 'var(--success)' : 'var(--danger)'};font-weight:500;margin-bottom:2px;">
+            ${isCorrect ? '✓' : '✗'} Q${qi + 1}: ${q.q}
+          </div>
+          ${!isCorrect ? `<div style="color:var(--text-3);">Correct answer: ${correctChoice.text}</div>` : ''}
+        </div>`;
+      }).join('')}
+    </div>`;
+ 
+  goTo('s-mcq-result');
 }
-
-async function submit(){
-  const payload={respondent_id:rid,submitted_at:new Date().toISOString(),duration_seconds:Math.round((Date.now()-t0)/1000),
-    responses:order.map((ai,pos)=>{const a=APPLICANTS[ai],r=responses[pos];return{position:pos+1,applicant_id:a.id,treatment:a.treatment,origin:a.origin,role:a.role,candidate_name:a.cred.name,visa_required:a.cred.visa,cred_rating:r.credRating,q1_advance:r.q1,q2_hireability:r.q2,q3_writing_quality:r.q3,q4_ai_detection:r.q4,q5_confidence:r.q5};})};
-  try{await fetch(SHEETS_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});}catch(e){console.warn(e);}
+ 
+function handleResultBtn() {
+  if (mcqPassed) {
+    goTo('s-question');
+  } else {
+    // Full reset
+    document.getElementById('consent-check').checked = false;
+    document.getElementById('consent-btn').disabled = true;
+    userAnswers = [];
+    buildMCQ();
+    goTo('s-consent');
+  }
 }
-
-function showDone(){
-  show('s-done');
-  document.getElementById('prog-fill').style.width='100%';
-  document.getElementById('prog-pct').textContent='100%';
-  document.getElementById('prog-lbl').textContent='Complete';
-  document.getElementById('hdr').textContent='Done';
-  const adv=responses.filter(r=>r.q1==='yes').length;
-  const rats=responses.map(r=>r.q2).filter(Boolean);
-  const avg=rats.length?(rats.reduce((a,b)=>a+b,0)/rats.length).toFixed(1):'--';
-  const ai=responses.filter(r=>r.q4&&r.q4.includes('AI')).length;
-  const mins=Math.round((Date.now()-t0)/60000);
-  document.getElementById('done-stats').innerHTML=
-    `<div class="stat"><div class="stat-label">Advanced to phone screen</div><div class="stat-val">${adv} / 8</div></div>`+
-    `<div class="stat"><div class="stat-label">Avg. hireability rating</div><div class="stat-val">${avg} / 7</div></div>`+
-    `<div class="stat"><div class="stat-label">Suspected AI writing</div><div class="stat-val">${ai} / 8</div></div>`+
-    `<div class="stat"><div class="stat-label">Time taken</div><div class="stat-val">${mins} min</div></div>`;
+ 
+// ── Screen navigation ────────────────────────────────────────────────────────
+const SCREENS = ['s-consent','s-position','s-mcq','s-mcq-result','s-question','s-write','s-done'];
+const LABELS  = ['Consent','Job Posting','Comprehension Check','Result','Rules','Write','Done'];
+ 
+function goTo(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0, 0);
+  const idx = SCREENS.indexOf(id);
+  const displaySteps = SCREENS.filter(s => s !== 's-mcq-result');
+  const dispIdx = displaySteps.indexOf(id);
+  const pct = dispIdx >= 0 ? Math.round(dispIdx / (displaySteps.length - 1) * 100) : 0;
+  document.getElementById('prog').style.width = pct + '%';
+  document.getElementById('step-pct').textContent = pct + '%';
+  document.getElementById('step-label').textContent =
+    id === 's-done' ? 'Complete' :
+    `Step ${Math.max(1,dispIdx+1)} of ${displaySteps.length - 1} — ${LABELS[idx] || ''}`;
+ 
+  if (id === 's-mcq') buildMCQ();
+  if (id === 's-write' && !startTime) { startTime = Date.now(); startTimer(); logEvent('TASK_START'); }
 }
-
-function restart(){rid='r_'+Date.now()+'_'+Math.random().toString(36).slice(2,7);t0=Date.now();idx=0;responses=[];show('s-intro');document.getElementById('prog-fill').style.width='0%';document.getElementById('prog-pct').textContent='';document.getElementById('prog-lbl').textContent='Getting started';document.getElementById('hdr').textContent='';}
+ 
+// ── Timer ─────────────────────────────────────────────────────────────────────
+let startTime = null, elapsed = 0, timerReady = false, timerInt = null;
+function fmt(s){ return Math.floor(s/60)+':'+String(s%60).padStart(2,'0'); }
+function startTimer() {
+  timerInt = setInterval(() => {
+    elapsed = Math.floor((Date.now() - startTime) / 1000);
+    document.getElementById('timer').textContent = fmt(elapsed);
+    if (elapsed >= 600) {
+      timerReady = true;
+      document.getElementById('timer-status').textContent = 'Minimum time reached ✓';
+      document.getElementById('timer-status').style.color = '#065f46';
+    } else {
+      document.getElementById('timer-status').textContent = 'Submit unlocks in ' + fmt(600 - elapsed);
+      if (600 - elapsed <= 120) document.getElementById('timer').classList.add('warn');
+    }
+    checkSubmit();
+  }, 1000);
+}
+ 
+// ── Word count ────────────────────────────────────────────────────────────────
+const textarea = document.getElementById('resp');
+function countWords(t){ return t.trim().split(/\s+/).filter(w=>w.length>0).length; }
+function updateWC() {
+  const w = countWords(textarea.value);
+  const pct = Math.min(w/250*100,100);
+  const lbl = document.getElementById('wc-label');
+  const bar  = document.getElementById('wc-bar');
+  const plbl = document.getElementById('wc-prog-lbl');
+  lbl.textContent = w + ' words';
+  lbl.className = 'stat'+(w>=250&&w<=350?' ok':w>350?' warn':'');
+  bar.style.width = pct+'%';
+  if (w<250){ bar.style.background='#e5e7eb'; plbl.textContent=w+' / 250 minimum'; }
+  else if (w<=350){ bar.style.background='#10b981'; plbl.textContent=w+' words ✓ (max 350)'; }
+  else { bar.style.background='#f59e0b'; plbl.textContent=w+' words — over 350 target'; }
+  checkSubmit();
+}
+function checkSubmit() {
+  const w = countWords(textarea.value);
+  submitBtn.disabled = !(timerReady && w>=225 && w<=400 && document.getElementById('ai-check').checked);
+}
+const submitBtn = document.getElementById('submit-btn');
+ 
+// ── Anti-AI ───────────────────────────────────────────────────────────────────
+let pasteCount=0, focusSwitches=0, speedFlagged=false, lastLen=0, lastCheck=Date.now(), events=[];
+function logEvent(type, data={}){ events.push({type, ts:Date.now(), elapsed, ...data}); }
+function show(id){ document.getElementById(id).classList.add('visible'); }
+function hide(id){ document.getElementById(id).classList.remove('visible'); }
+ 
+textarea.addEventListener('paste', e => {
+  e.preventDefault(); pasteCount++;
+  show('paste-warn'); setTimeout(()=>hide('paste-warn'), 4000);
+  logEvent('PASTE_BLOCKED',{count:pasteCount});
+});
+textarea.addEventListener('contextmenu', e => e.preventDefault());
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) {
+    focusSwitches++;
+    logEvent('FOCUS_LOST',{count:focusSwitches});
+    document.getElementById('focus-count').textContent=' ('+focusSwitches+'x)';
+    show('focus-warn');
+    const l=document.getElementById('tab-label');
+    l.textContent='⚠ '+focusSwitches+' tab switches'; l.className='stat warn';
+  } else { setTimeout(()=>hide('focus-warn'),5000); }
+});
+textarea.addEventListener('input', () => {
+  const now=Date.now(), cur=textarea.value.length, delta=cur-lastLen, dt=(now-lastCheck)/1000;
+  if(dt>0&&delta>0&&(delta/dt)>300&&delta>60){ speedFlagged=true; show('speed-warn'); logEvent('SPEED_FLAG'); }
+  lastLen=cur; lastCheck=now; updateWC();
+});
+ 
+// ── Submit ────────────────────────────────────────────────────────────────────
+async function submitResponse() {
+  clearInterval(timerInt);
+  let score=100;
+  if(pasteCount>0) score-=pasteCount*20;
+  if(focusSwitches>0) score-=focusSwitches*10;
+  if(speedFlagged) score-=30;
+  score=Math.max(0,score);
+  const payload={
+    type:'writing_task',
+    prolific_pid:new URLSearchParams(window.location.search).get('PROLIFIC_PID')||'test',
+    text:textarea.value, word_count:countWords(textarea.value),
+    time_seconds:elapsed, paste_count:pasteCount, focus_switches:focusSwitches,
+    speed_flagged:speedFlagged, integrity_score:score,
+    ai_disclosure:document.getElementById('ai-disclosure').value, events
+  };
+  try{ await fetch(SHEETS_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)}); }
+  catch(e){ console.warn(e); }
+  goTo('s-done');
+}
+ 
+// ── Rules toggle ──────────────────────────────────────────────────────────────
+function toggleRules() {
+  const panel = document.getElementById('rules-panel');
+  const chevron = document.getElementById('rules-chevron');
+  const open = panel.style.display === 'none';
+  panel.style.display = open ? 'block' : 'none';
+  chevron.textContent = open ? '▲ Hide' : '▼ Show';
+}
+ 
+// Init
+document.getElementById('prog').style.width='0%';
 </script>
 </body>
 </html>
