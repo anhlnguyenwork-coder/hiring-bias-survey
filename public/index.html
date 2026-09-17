@@ -32,7 +32,7 @@
       display:flex;justify-content:space-between;}
     .shell{max-width:760px;margin:0 auto;padding:1.5rem 1.25rem 4rem;}
     .screen{display:none;} .screen.active{display:block;}
- 
+
     .card{background:var(--surface);border:1px solid var(--border);
       border-radius:var(--radius-lg);padding:1.5rem 1.75rem;margin-bottom:1.25rem;}
     .card h3{font-size:15px;font-weight:600;margin-bottom:0.4rem;}
@@ -107,13 +107,13 @@
     .section-title{font-size:20px;font-weight:600;letter-spacing:-0.01em;margin-bottom:4px;}
     .section-sub{font-size:13px;color:var(--text-2);margin-bottom:1.25rem;}
     hr.divider{border:none;border-top:1px solid var(--border);margin:1.25rem 0;}
- 
+
     /* ── MCQ styles ────────────────────────────────────────────────────── */
     .mcq-progress{font-size:12px;color:var(--text-3);margin-bottom:1.25rem;
       display:flex;justify-content:space-between;align-items:center;}
     .mcq-bar{height:4px;background:var(--border);border-radius:99px;margin-bottom:1.5rem;}
     .mcq-bar-fill{height:100%;background:var(--accent);border-radius:99px;transition:width 0.3s;}
- 
+
     .q-card{background:var(--surface);border:1px solid var(--border);
       border-radius:var(--radius-lg);padding:1.25rem 1.5rem;margin-bottom:1rem;}
     .q-num{font-size:11px;font-weight:600;color:var(--text-3);margin-bottom:6px;
@@ -131,7 +131,7 @@
     .choice-btn.correct{border-color:#10b981;background:#ecfdf5;color:var(--success);}
     .choice-btn.wrong{border-color:var(--danger-border);background:var(--danger-bg);color:var(--danger);}
     .choice-letter{font-weight:700;flex-shrink:0;width:18px;}
- 
+
     .result-card{border-radius:var(--radius-lg);padding:1.5rem;text-align:center;
       margin-bottom:1.25rem;}
     .result-card.pass{background:var(--success-bg);border:1px solid var(--success-border);}
@@ -141,17 +141,34 @@
     .result-score.fail{color:var(--danger);}
     .result-label{font-size:15px;font-weight:500;margin-bottom:8px;}
     .result-sub{font-size:13px;color:var(--text-2);}
+
+    /* ── Fullscreen lock overlay ───────────────────────────────────────── */
+    #lock-overlay{position:fixed;inset:0;z-index:9999;
+      background:rgba(17,24,39,0.97);display:none;flex-direction:column;
+      align-items:center;justify-content:center;text-align:center;padding:2rem;color:#fff;}
+    #lock-overlay.visible{display:flex;}
+    #lock-overlay h2{font-size:22px;font-weight:600;margin-bottom:0.75rem;}
+    #lock-overlay p{font-size:14px;color:#d1d5db;max-width:440px;
+      margin-bottom:1.5rem;line-height:1.6;}
+    #lock-overlay .btn-primary{width:auto;padding:12px 28px;}
   </style>
 </head>
 <body>
- 
+
+<div id="lock-overlay">
+  <div style="font-size:40px;margin-bottom:1rem;">🔒</div>
+  <h2>Please return to the assessment</h2>
+  <p id="lock-msg">This study runs in fullscreen. You left the assessment window. Click below to return and keep going. Leaving repeatedly is recorded and may void your submission.</p>
+  <button class="btn btn-primary" onclick="resumeFullscreen()">Return to Assessment</button>
+</div>
+
 <header>
   <div class="header-inner">
     <span class="logo">DePauw<span>Study</span></span>
     <span style="font-size:13px;color:var(--text-3);" id="hdr-right">Writing Study</span>
   </div>
 </header>
- 
+
 <div class="progress-wrap">
   <div class="step-label">
     <span id="step-label">Step 1 of 5</span>
@@ -159,9 +176,9 @@
   </div>
   <div class="progress-bar"><div class="progress-fill" id="prog" style="width:0%"></div></div>
 </div>
- 
+
 <div class="shell">
- 
+
 <!-- ══ A.0 CONSENT ════════════════════════════════════════════════════════════ -->
 <div class="screen active" id="s-consent">
   <p class="section-eyebrow">A.0</p>
@@ -188,9 +205,9 @@
     <input type="checkbox" id="consent-check" onchange="document.getElementById('consent-btn').disabled=!this.checked"/>
     <label for="consent-check">I have read the above and agree to participate in this study.</label>
   </div>
-  <button class="btn btn-primary" id="consent-btn" disabled onclick="goTo('s-position')">Continue →</button>
+  <button class="btn btn-primary" id="consent-btn" disabled onclick="armLock();goTo('s-position')">Continue →</button>
 </div>
- 
+
 <!-- ══ A.1 THE POSITION ═══════════════════════════════════════════════════════ -->
 <div class="screen" id="s-position">
   <p class="section-eyebrow">A.1</p>
@@ -214,22 +231,22 @@
   <div class="notice">&#9432;&nbsp; Read the posting thoroughly. The next page will test your understanding before you can continue to the writing task.</div>
   <button class="btn btn-primary" onclick="goTo('s-mcq')">I have read the posting — Take Comprehension Check →</button>
 </div>
- 
+
 <!-- ══ A.1.5 COMPREHENSION CHECK (MCQ) ═══════════════════════════════════════ -->
 <div class="screen" id="s-mcq">
   <p class="section-eyebrow">A.1.5 — Comprehension Check</p>
   <h1 class="section-title">Reading Comprehension</h1>
   <p class="section-sub">Answer all 15 questions based on the job posting you just read. You must score 80% or higher (12 out of 15) to continue. Use only what you read — no outside knowledge needed.</p>
- 
+
   <div class="mcq-bar"><div class="mcq-bar-fill" id="mcq-bar" style="width:0%"></div></div>
- 
+
   <div id="mcq-questions"></div>
- 
+
   <button class="btn btn-primary" id="mcq-submit-btn" disabled onclick="submitMCQ()">
     Submit Answers
   </button>
 </div>
- 
+
 <!-- ══ MCQ RESULT ══════════════════════════════════════════════════════════════ -->
 <div class="screen" id="s-mcq-result">
   <p class="section-eyebrow">A.1.5 — Result</p>
@@ -242,7 +259,7 @@
   <div id="result-breakdown" style="margin-bottom:1.25rem;"></div>
   <button class="btn btn-primary" id="result-btn" onclick="handleResultBtn()"></button>
 </div>
- 
+
 <!-- ══ A.2 + A.3 QUESTION & RULES ════════════════════════════════════════════ -->
 <div class="screen" id="s-question">
   <p class="section-eyebrow">A.2 + A.3</p>
@@ -274,7 +291,7 @@
   </div>
   <button class="btn btn-primary" onclick="goTo('s-write')">I have read the rules — Start Writing →</button>
 </div>
- 
+
 <!-- ══ A.4 + A.5 WRITING ══════════════════════════════════════════════════════ -->
 <div class="screen" id="s-write">
   <p class="section-eyebrow">A.4 + A.5</p>
@@ -307,7 +324,7 @@
       </div>
     </div>
   </div>
- 
+
   <div class="warn-box" id="paste-warn">⚠️ <strong>Pasting is not allowed.</strong> Please type your response directly into the box.</div>
   <div class="warn-box" id="focus-warn">⚠️ You navigated away from this page. Please stay on this tab while writing. <span id="focus-count"></span></div>
   <div class="warn-box" id="speed-warn" style="background:var(--danger-bg);border-color:var(--danger-border);color:var(--danger);">🚫 <strong>Unusually fast text input detected.</strong> Your response has been flagged for review.</div>
@@ -346,7 +363,7 @@
   <div class="integrity">This task monitors paste events, tab switches, and typing speed as data-quality checks. We do not record your screen or keystrokes.</div>
   <button class="btn btn-primary" id="submit-btn" disabled onclick="submitResponse()">Submit Response</button>
 </div>
- 
+
 <!-- ══ DONE ════════════════════════════════════════════════════════════════════ -->
 <div class="screen" id="s-done">
   <div class="done-wrap">
@@ -355,12 +372,12 @@
     <p class="done-sub">Your response has been recorded. Please return to Prolific to complete your submission.</p>
   </div>
 </div>
- 
+
 </div>
- 
+
 <script>
 const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbwBQCUicwNlhIC4KUKm0aWbnpPPM8kvvqNtXbzy5ulM2VbmJ249_37Yg1byOupMRNlonQ/exec';
- 
+
 // ── MCQ data — 15 questions about the HR Specialist posting ──────────────────
 const QUESTIONS = [
   {
@@ -514,7 +531,7 @@ const QUESTIONS = [
     correct: 2
   }
 ];
- 
+
 // Shuffle answers while tracking correct index
 function shuffleChoices(q) {
   const indexed = q.choices.map((c, i) => ({ text: c, isCorrect: i === q.correct }));
@@ -524,17 +541,17 @@ function shuffleChoices(q) {
   }
   return indexed;
 }
- 
+
 let shuffledQs = [];
 let userAnswers = [];
 let mcqPassed = false;
- 
+
 function buildMCQ() {
   shuffledQs = QUESTIONS.map(q => ({ ...q, shuffled: shuffleChoices(q) }));
   userAnswers = new Array(QUESTIONS.length).fill(null);
   const container = document.getElementById('mcq-questions');
   container.innerHTML = '';
- 
+
   shuffledQs.forEach((q, qi) => {
     const card = document.createElement('div');
     card.className = 'q-card';
@@ -553,7 +570,7 @@ function buildMCQ() {
   });
   updateMCQProgress();
 }
- 
+
 function selectChoice(qi, ci) {
   userAnswers[qi] = ci;
   // Update button styles
@@ -562,36 +579,36 @@ function selectChoice(qi, ci) {
   });
   updateMCQProgress();
 }
- 
+
 function updateMCQProgress() {
   const answered = userAnswers.filter(a => a !== null).length;
   const pct = (answered / QUESTIONS.length) * 100;
   document.getElementById('mcq-bar').style.width = pct + '%';
   document.getElementById('mcq-submit-btn').disabled = answered < QUESTIONS.length;
 }
- 
+
 function submitMCQ() {
   let correct = 0;
   shuffledQs.forEach((q, qi) => {
     const chosen = userAnswers[qi];
     if (chosen !== null && q.shuffled[chosen].isCorrect) correct++;
   });
- 
+
   const score = correct;
   const pct = Math.round((correct / QUESTIONS.length) * 100);
   mcqPassed = pct >= 80;
- 
+
   const card = document.getElementById('result-card');
   const scoreEl = document.getElementById('result-score');
   const labelEl = document.getElementById('result-label');
   const subEl   = document.getElementById('result-sub');
   const btn     = document.getElementById('result-btn');
   const title   = document.getElementById('result-title');
- 
+
   scoreEl.textContent = `${correct} / ${QUESTIONS.length}`;
   scoreEl.className = `result-score ${mcqPassed ? 'pass' : 'fail'}`;
   card.className = `result-card ${mcqPassed ? 'pass' : 'fail'}`;
- 
+
   if (mcqPassed) {
     title.textContent = 'You Passed!';
     labelEl.textContent = `${pct}% — Comprehension check passed`;
@@ -606,7 +623,7 @@ function submitMCQ() {
     btn.className = 'btn btn-primary';
     btn.style.background = '#dc2626';
   }
- 
+
   // Show breakdown
   const breakdown = document.getElementById('result-breakdown');
   breakdown.innerHTML = `
@@ -624,10 +641,10 @@ function submitMCQ() {
         </div>`;
       }).join('')}
     </div>`;
- 
+
   goTo('s-mcq-result');
 }
- 
+
 function handleResultBtn() {
   if (mcqPassed) {
     goTo('s-question');
@@ -640,11 +657,11 @@ function handleResultBtn() {
     goTo('s-consent');
   }
 }
- 
+
 // ── Screen navigation ────────────────────────────────────────────────────────
 const SCREENS = ['s-consent','s-position','s-mcq','s-mcq-result','s-question','s-write','s-done'];
 const LABELS  = ['Consent','Job Posting','Comprehension Check','Result','Rules','Write','Done'];
- 
+
 function goTo(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
@@ -658,11 +675,11 @@ function goTo(id) {
   document.getElementById('step-label').textContent =
     id === 's-done' ? 'Complete' :
     `Step ${Math.max(1,dispIdx+1)} of ${displaySteps.length - 1} — ${LABELS[idx] || ''}`;
- 
+
   if (id === 's-mcq') buildMCQ();
   if (id === 's-write' && !startTime) { startTime = Date.now(); startTimer(); logEvent('TASK_START'); }
 }
- 
+
 // ── Timer ─────────────────────────────────────────────────────────────────────
 let startTime = null, elapsed = 0, timerReady = false, timerInt = null;
 function fmt(s){ return Math.floor(s/60)+':'+String(s%60).padStart(2,'0'); }
@@ -681,7 +698,7 @@ function startTimer() {
     checkSubmit();
   }, 1000);
 }
- 
+
 // ── Word count ────────────────────────────────────────────────────────────────
 const textarea = document.getElementById('resp');
 function countWords(t){ return t.trim().split(/\s+/).filter(w=>w.length>0).length; }
@@ -704,13 +721,13 @@ function checkSubmit() {
   submitBtn.disabled = !(timerReady && w>=225 && w<=400 && document.getElementById('ai-check').checked);
 }
 const submitBtn = document.getElementById('submit-btn');
- 
+
 // ── Anti-AI ───────────────────────────────────────────────────────────────────
 let pasteCount=0, focusSwitches=0, speedFlagged=false, lastLen=0, lastCheck=Date.now(), events=[];
 function logEvent(type, data={}){ events.push({type, ts:Date.now(), elapsed, ...data}); }
 function show(id){ document.getElementById(id).classList.add('visible'); }
 function hide(id){ document.getElementById(id).classList.remove('visible'); }
- 
+
 textarea.addEventListener('paste', e => {
   e.preventDefault(); pasteCount++;
   show('paste-warn'); setTimeout(()=>hide('paste-warn'), 4000);
@@ -732,7 +749,7 @@ textarea.addEventListener('input', () => {
   if(dt>0&&delta>0&&(delta/dt)>300&&delta>60){ speedFlagged=true; show('speed-warn'); logEvent('SPEED_FLAG'); }
   lastLen=cur; lastCheck=now; updateWC();
 });
- 
+
 // ── Submit ────────────────────────────────────────────────────────────────────
 async function submitResponse() {
   clearInterval(timerInt);
@@ -751,9 +768,9 @@ async function submitResponse() {
   };
   try{ await fetch(SHEETS_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)}); }
   catch(e){ console.warn(e); }
-  goTo('s-done');
+  disarmLock(); goTo('s-done');
 }
- 
+
 // ── Rules toggle ──────────────────────────────────────────────────────────────
 function toggleRules() {
   const panel = document.getElementById('rules-panel');
@@ -762,7 +779,26 @@ function toggleRules() {
   panel.style.display = open ? 'block' : 'none';
   chevron.textContent = open ? '▲ Hide' : '▼ Show';
 }
- 
+
+// ── Fullscreen lock ─────────────────────────────────────────────────────────
+let locked = false;
+function enterFS(){ const el=document.documentElement;
+  (el.requestFullscreen||el.webkitRequestFullscreen||function(){}).call(el); }
+function exitFS(){ if(document.fullscreenElement||document.webkitFullscreenElement){
+  (document.exitFullscreen||document.webkitExitFullscreen||function(){}).call(document); } }
+function showLock(){ document.getElementById('lock-overlay').classList.add('visible'); }
+function hideLock(){ document.getElementById('lock-overlay').classList.remove('visible'); }
+function resumeFullscreen(){ enterFS(); hideLock(); }
+function armLock(){ locked=true; enterFS();
+  window.addEventListener('beforeunload', beforeUnloadGuard); }
+function disarmLock(){ locked=false;
+  window.removeEventListener('beforeunload', beforeUnloadGuard); hideLock(); exitFS(); }
+function beforeUnloadGuard(e){ if(locked){ e.preventDefault(); e.returnValue=''; } }
+function onFSChange(){ const fs=document.fullscreenElement||document.webkitFullscreenElement;
+  if(locked && !fs){ showLock(); logEvent('EXIT_FULLSCREEN'); } }
+document.addEventListener('fullscreenchange', onFSChange);
+document.addEventListener('webkitfullscreenchange', onFSChange);
+
 // Init
 document.getElementById('prog').style.width='0%';
 </script>
