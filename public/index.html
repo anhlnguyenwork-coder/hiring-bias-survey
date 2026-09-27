@@ -141,26 +141,9 @@
     .result-score.fail{color:var(--danger);}
     .result-label{font-size:15px;font-weight:500;margin-bottom:8px;}
     .result-sub{font-size:13px;color:var(--text-2);}
-
-    /* ── Fullscreen lock overlay ───────────────────────────────────────── */
-    #lock-overlay{position:fixed;inset:0;z-index:9999;
-      background:rgba(17,24,39,0.97);display:none;flex-direction:column;
-      align-items:center;justify-content:center;text-align:center;padding:2rem;color:#fff;}
-    #lock-overlay.visible{display:flex;}
-    #lock-overlay h2{font-size:22px;font-weight:600;margin-bottom:0.75rem;}
-    #lock-overlay p{font-size:14px;color:#d1d5db;max-width:440px;
-      margin-bottom:1.5rem;line-height:1.6;}
-    #lock-overlay .btn-primary{width:auto;padding:12px 28px;}
   </style>
 </head>
 <body>
-
-<div id="lock-overlay">
-  <div style="font-size:40px;margin-bottom:1rem;">🔒</div>
-  <h2>Please return to the assessment</h2>
-  <p id="lock-msg">This study runs in fullscreen. You left the assessment window. Click below to return and keep going. Leaving repeatedly is recorded and may void your submission.</p>
-  <button class="btn btn-primary" onclick="resumeFullscreen()">Return to Assessment</button>
-</div>
 
 <header>
   <div class="header-inner">
@@ -205,7 +188,7 @@
     <input type="checkbox" id="consent-check" onchange="document.getElementById('consent-btn').disabled=!this.checked"/>
     <label for="consent-check">I have read the above and agree to participate in this study.</label>
   </div>
-  <button class="btn btn-primary" id="consent-btn" disabled onclick="armLock();goTo('s-position')">Continue →</button>
+  <button class="btn btn-primary" id="consent-btn" disabled onclick="goTo('s-position')">Continue →</button>
 </div>
 
 <!-- ══ A.1 THE POSITION ═══════════════════════════════════════════════════════ -->
@@ -236,7 +219,7 @@
 <div class="screen" id="s-mcq">
   <p class="section-eyebrow">A.1.5 — Comprehension Check</p>
   <h1 class="section-title">Reading Comprehension</h1>
-  <p class="section-sub">Answer all 15 questions based on the job posting you just read. You must score 80% or higher (12 out of 15) to continue. Use only what you read — no outside knowledge needed.</p>
+  <p class="section-sub">Answer all 15 questions based on the job posting you just read. You must score 80% or higher (8 out of 10) to continue. Use only what you read — no outside knowledge needed.</p>
 
   <div class="mcq-bar"><div class="mcq-bar-fill" id="mcq-bar" style="width:0%"></div></div>
 
@@ -267,9 +250,9 @@
   <p class="section-sub">Read the question and all rules before writing your response.</p>
   <div class="card" style="background:var(--accent-bg);border-color:var(--accent-border);">
     <h3 style="color:var(--accent);">The Question</h3>
-    <p style="font-size:15px;font-weight:500;color:var(--text);">"Explain why you are a good fit for this position based on your past experience."</p>
+    <p style="font-size:15px;font-weight:500;color:var(--text);">"Explain why you are a good fit for this position based on your early-career experience in HR."</p>
     <p style="margin-top:0.5rem;">Answer as if you were applying to the HR Specialist position above, as an early-career candidate — a current senior, recent graduate, or someone in their first year or two of work.</p>
-    <p><strong>Write about your own real experiences.</strong> Jobs, internships, campus roles, volunteer work, group projects, athletics, part-time work — anything where you built a skill this role calls for. Do not invent accomplishments.</p>
+    <p><strong>Write about your own real experiences from your time in college and your first two years of employment.</strong> Jobs, internships, campus roles, volunteer work, group projects, athletics, part-time work — anything where you built a skill this role calls for. Do not invent accomplishments.</p>
   </div>
   <div class="card">
     <h3>Rules — read all of these</h3>
@@ -352,14 +335,6 @@
       <span class="prog-lbl" id="wc-prog-lbl">0 / 250 words minimum</span>
     </div>
   </div>
-  <div class="card" style="margin-bottom:1.25rem;">
-    <div class="check-row" style="margin-bottom:0.5rem;">
-      <input type="checkbox" id="ai-check" onchange="checkSubmit()"/>
-      <label for="ai-check">I wrote this response entirely myself. I did not use ChatGPT, Grammarly, or any other AI writing or editing tool at any point.</label>
-    </div>
-    <p style="font-size:12px;color:var(--text-3);margin-top:0.5rem;">If you did use one — even a little — please tell us here:</p>
-    <textarea id="ai-disclosure" rows="2" style="width:100%;padding:8px;font-family:inherit;font-size:13px;border:1px solid var(--border);border-radius:var(--radius);resize:none;margin-top:6px;" placeholder="Optional: describe any AI tool use here..."></textarea>
-  </div>
   <div class="integrity">This task monitors paste events, tab switches, and typing speed as data-quality checks. We do not record your screen or keystrokes.</div>
   <button class="btn btn-primary" id="submit-btn" disabled onclick="submitResponse()">Submit Response</button>
 </div>
@@ -376,7 +351,7 @@
 </div>
 
 <script>
-const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbwBQCUicwNlhIC4KUKm0aWbnpPPM8kvvqNtXbzy5ulM2VbmJ249_37Yg1byOupMRNlonQ/exec';
+const SHEETS_URL = 'YOUR_APPS_SCRIPT_URL_HERE';
 
 // ── MCQ data — 15 questions about the HR Specialist posting ──────────────────
 const QUESTIONS = [
@@ -431,32 +406,22 @@ const QUESTIONS = [
     correct: 1
   },
   {
-    q: "Which skill from the list below is NOT in the posting?",
-    choices: [
-      "Time Management",
-      "Critical Thinking",
-      "Budget Analysis",
-      "Writing"
-    ],
-    correct: 2
-  },
-  {
-    q: "What kind of work might an HR Specialist do beyond hiring?",
-    choices: [
-      "Nothing — the role is strictly about recruitment",
-      "Other activities across multiple human resources areas",
-      "Accounting and payroll only",
-      "Legal work for the company"
-    ],
-    correct: 1
-  },
-  {
     q: "Which of these is listed as a common job title for this role?",
     choices: [
       "Chief HR Officer",
       "HR Business Partner",
       "HR Coordinator",
       "VP of People"
+    ],
+    correct: 2
+  },
+  {
+    q: "Could someone who just graduated from college apply to this job?",
+    choices: [
+      "No, they must have at least 3 years of work experience",
+      "Only if they majored in HR",
+      "Yes, because it is entry-level and open to those with 0–2 years",
+      "Only if they have a master's degree"
     ],
     correct: 2
   },
@@ -471,62 +436,22 @@ const QUESTIONS = [
     correct: 1
   },
   {
-    q: "How many years of experience does this posting say you need at most?",
+    q: "You are a junior staff member applying for this role. Which opening sentence fits best for your cover letter?",
     choices: [
-      "5 years",
-      "10 years",
-      "2 years",
-      "No experience required"
-    ],
-    correct: 2
-  },
-  {
-    q: "Is 'Coordination' listed as one of the skills for this role?",
-    choices: [
-      "No, it is not mentioned",
-      "Yes, it is one of the emphasized skills",
-      "Only in senior HR roles",
-      "It depends on the job title"
+      "I have 15 years of senior HR experience leading global talent acquisition teams.",
+      "During my internship at a campus career center, I supported over 50 student mock interviews and learned how structured screening improves hiring outcomes.",
+      "I enjoy watching HR documentaries and reading about workplace culture in my free time.",
+      "To Whom It May Concern, please find attached my resume for your consideration."
     ],
     correct: 1
   },
   {
-    q: "Which of these is listed as an emphasized skill in the posting?",
+    q: "As a junior applicant writing about your fit for this HR Specialist role, which example best shows relevant experience?",
     choices: [
-      "Spreadsheet software",
-      "Judgment and Decision Making",
-      "Foreign language fluency",
-      "Physical fitness"
-    ],
-    correct: 1
-  },
-  {
-    q: "Could someone who just graduated from college apply to this job?",
-    choices: [
-      "No, they must have at least 3 years of work experience",
-      "Only if they majored in HR",
-      "Yes, because it is entry-level and open to those with 0–2 years",
-      "Only if they have a master's degree"
-    ],
-    correct: 2
-  },
-  {
-    q: "Which of the following best describes 'Service Orientation' in this job?",
-    choices: [
-      "Working in customer service at a restaurant",
-      "A skill listed in the posting related to how you serve and support others",
-      "A technical certification required for the role",
-      "The ability to drive company vehicles"
-    ],
-    correct: 1
-  },
-  {
-    q: "Based on the posting, what type of organization would hire an HR Specialist?",
-    choices: [
-      "Only technology companies",
-      "Only government agencies",
-      "Any organization that needs to recruit and manage people",
-      "Only companies with more than 10,000 employees"
+      "I once helped a friend write their resume, so I understand what HR does.",
+      "I am a fast learner and a hard worker who is passionate about people.",
+      "As a team leader for a group project, I coordinated task assignments, followed up with teammates who were behind, and resolved a disagreement before our final deadline.",
+      "I have always been interested in human resources since I was a child."
     ],
     correct: 2
   }
@@ -718,7 +643,7 @@ function updateWC() {
 }
 function checkSubmit() {
   const w = countWords(textarea.value);
-  submitBtn.disabled = !(timerReady && w>=225 && w<=400 && document.getElementById('ai-check').checked);
+  submitBtn.disabled = !(timerReady && w>=225 && w<=400);
 }
 const submitBtn = document.getElementById('submit-btn');
 
@@ -763,12 +688,11 @@ async function submitResponse() {
     prolific_pid:new URLSearchParams(window.location.search).get('PROLIFIC_PID')||'test',
     text:textarea.value, word_count:countWords(textarea.value),
     time_seconds:elapsed, paste_count:pasteCount, focus_switches:focusSwitches,
-    speed_flagged:speedFlagged, integrity_score:score,
-    ai_disclosure:document.getElementById('ai-disclosure').value, events
+    speed_flagged:speedFlagged, integrity_score:score, events
   };
   try{ await fetch(SHEETS_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)}); }
   catch(e){ console.warn(e); }
-  disarmLock(); goTo('s-done');
+  goTo('s-done');
 }
 
 // ── Rules toggle ──────────────────────────────────────────────────────────────
@@ -779,25 +703,6 @@ function toggleRules() {
   panel.style.display = open ? 'block' : 'none';
   chevron.textContent = open ? '▲ Hide' : '▼ Show';
 }
-
-// ── Fullscreen lock ─────────────────────────────────────────────────────────
-let locked = false;
-function enterFS(){ const el=document.documentElement;
-  (el.requestFullscreen||el.webkitRequestFullscreen||function(){}).call(el); }
-function exitFS(){ if(document.fullscreenElement||document.webkitFullscreenElement){
-  (document.exitFullscreen||document.webkitExitFullscreen||function(){}).call(document); } }
-function showLock(){ document.getElementById('lock-overlay').classList.add('visible'); }
-function hideLock(){ document.getElementById('lock-overlay').classList.remove('visible'); }
-function resumeFullscreen(){ enterFS(); hideLock(); }
-function armLock(){ locked=true; enterFS();
-  window.addEventListener('beforeunload', beforeUnloadGuard); }
-function disarmLock(){ locked=false;
-  window.removeEventListener('beforeunload', beforeUnloadGuard); hideLock(); exitFS(); }
-function beforeUnloadGuard(e){ if(locked){ e.preventDefault(); e.returnValue=''; } }
-function onFSChange(){ const fs=document.fullscreenElement||document.webkitFullscreenElement;
-  if(locked && !fs){ showLock(); logEvent('EXIT_FULLSCREEN'); } }
-document.addEventListener('fullscreenchange', onFSChange);
-document.addEventListener('webkitfullscreenchange', onFSChange);
 
 // Init
 document.getElementById('prog').style.width='0%';
