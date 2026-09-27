@@ -211,8 +211,8 @@
       <span class="skill">Coordination</span><span class="skill">Time Management</span>
     </div>
   </div>
-  <div class="notice">&#9432;&nbsp; Read the posting thoroughly. The next page will test your understanding before you can continue to the writing task.</div>
-  <button class="btn btn-primary" onclick="goTo('s-mcq')">I have read the posting — Take Comprehension Check →</button>
+  <div class="notice">&#9432;&nbsp; Read the posting thoroughly. The next page will cover the question and rules before the quiz.</div>
+  <button class="btn btn-primary" onclick="goTo('s-question')">I have read the posting — Continue →</button>
 </div>
 
 <!-- ══ A.1.5 QUIZ (MCQ) ═══════════════════════════════════════════════════════ -->
@@ -272,7 +272,7 @@
       <p style="color:var(--danger);"><strong>No AI tools — this is required.</strong> Your response must be written entirely by you, without AI assistance of any kind. Please type directly into the box — do not paste.</p>
     </div>
   </div>
-  <button class="btn btn-primary" onclick="goTo('s-write')">I have read the rules — Start Writing →</button>
+  <button class="btn btn-primary" onclick="goTo('s-mcq')">I have read the rules — Take the Quiz →</button>
 </div>
 
 <!-- ══ A.4 + A.5 WRITING ══════════════════════════════════════════════════════ -->
@@ -338,6 +338,10 @@
     </div>
   </div>
   <div class="integrity">This task monitors paste events, tab switches, and typing speed as data-quality checks. We do not record your screen or keystrokes.</div>
+  <div class="check-row" style="margin-bottom:1.25rem;">
+    <input type="checkbox" id="ai-check" onchange="checkSubmit()"/>
+    <label for="ai-check">I confirm I wrote this response entirely myself and did not use ChatGPT, Grammarly, or any other AI writing or editing tool at any point.</label>
+  </div>
   <button class="btn btn-primary" id="submit-btn" disabled onclick="submitResponse()">Submit Response</button>
 </div>
 
@@ -574,7 +578,7 @@ function submitMCQ() {
 
 function handleResultBtn() {
   if (mcqPassed) {
-    goTo('s-question');
+    goTo('s-write');
   } else {
     // Full reset
     document.getElementById('consent-check').checked = false;
@@ -586,8 +590,8 @@ function handleResultBtn() {
 }
 
 // ── Screen navigation ────────────────────────────────────────────────────────
-const SCREENS = ['s-consent','s-position','s-mcq','s-mcq-result','s-question','s-write','s-done'];
-const LABELS  = ['Consent','Job Posting','Comprehension Check','Result','Rules','Write','Done'];
+const SCREENS = ['s-consent','s-position','s-question','s-mcq','s-mcq-result','s-write','s-done'];
+const LABELS  = ['Consent','Job Posting','Rules','Quiz','Result','Write','Done'];
 
 function goTo(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
@@ -645,7 +649,7 @@ function updateWC() {
 }
 function checkSubmit() {
   const w = countWords(textarea.value);
-  submitBtn.disabled = !(timerReady && w>=225 && w<=400);
+  submitBtn.disabled = !(timerReady && w>=225 && w<=400 && document.getElementById('ai-check').checked);
 }
 const submitBtn = document.getElementById('submit-btn');
 
