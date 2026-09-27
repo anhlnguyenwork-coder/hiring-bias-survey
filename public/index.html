@@ -141,9 +141,36 @@
     .result-score.fail{color:var(--danger);}
     .result-label{font-size:15px;font-weight:500;margin-bottom:8px;}
     .result-sub{font-size:13px;color:var(--text-2);}
+
+    /* Lock overlay */
+    .lock-overlay{display:none;position:fixed;inset:0;background:rgba(10,14,30,0.97);
+      z-index:9999;flex-direction:column;align-items:center;justify-content:center;
+      text-align:center;padding:2rem;}
+    .lock-overlay.visible{display:flex;}
+    .lock-icon{font-size:56px;margin-bottom:1rem;}
+    .lock-title{font-size:22px;font-weight:700;color:#fff;margin-bottom:8px;}
+    .lock-sub{font-size:14px;color:#9ca3af;max-width:420px;line-height:1.65;margin-bottom:0;}
+    .lock-btn{margin-top:1.5rem;padding:11px 28px;background:var(--accent);color:#fff;
+      border:none;border-radius:var(--radius);font-size:14px;font-weight:500;
+      cursor:pointer;font-family:inherit;}
+    .lock-btn:hover{background:#1e40af;}
+    /* Back/forward nav row */
+    .nav-row{display:flex;gap:10px;margin-top:0;}
+    .btn-back{background:var(--surface);color:var(--text-2);border:1.5px solid var(--border-strong);
+      padding:10px 20px;border-radius:var(--radius);font-size:14px;font-weight:500;
+      cursor:pointer;font-family:inherit;white-space:nowrap;}
+    .btn-back:hover{background:var(--surface-alt);}
   </style>
 </head>
 <body>
+
+<!-- ══ FULLSCREEN LOCK OVERLAY ═══════════════════════════════════════════════ -->
+<div class="lock-overlay" id="lock-overlay">
+  <div class="lock-icon">🔒</div>
+  <div class="lock-title">Please stay in this window</div>
+  <div class="lock-sub">You have left the assessment screen. This is a monitored task — please return to the window to continue. Leaving repeatedly will be flagged in your submission data.</div>
+  <button class="lock-btn" onclick="returnToTask()">Return to Task →</button>
+</div>
 
 <header>
   <div class="header-inner">
@@ -212,7 +239,10 @@
     </div>
   </div>
   <div class="notice">&#9432;&nbsp; Read the posting thoroughly. The next page will cover the question and rules before the quiz.</div>
-  <button class="btn btn-primary" onclick="goTo('s-question')">I have read the posting — Continue →</button>
+  <div class="nav-row">
+    <button class="btn-back" onclick="goTo('s-consent')">← Back</button>
+    <button class="btn btn-primary" style="flex:1;" onclick="goTo('s-question')">I have read the posting — Continue →</button>
+  </div>
 </div>
 
 <!-- ══ A.1.5 QUIZ (MCQ) ═══════════════════════════════════════════════════════ -->
@@ -272,7 +302,10 @@
       <p style="color:var(--danger);"><strong>No AI tools — this is required.</strong> Your response must be written entirely by you, without AI assistance of any kind. Please type directly into the box — do not paste.</p>
     </div>
   </div>
-  <button class="btn btn-primary" onclick="goTo('s-mcq')">I have read the rules — Take the Quiz →</button>
+  <div class="nav-row">
+    <button class="btn-back" onclick="goTo('s-position')">← Back</button>
+    <button class="btn btn-primary" style="flex:1;" onclick="startQuizLocked()">I have read the rules — Take the Quiz →</button>
+  </div>
 </div>
 
 <!-- ══ A.4 + A.5 WRITING ══════════════════════════════════════════════════════ -->
@@ -592,6 +625,7 @@ function handleResultBtn() {
 // ── Screen navigation ────────────────────────────────────────────────────────
 const SCREENS = ['s-consent','s-position','s-question','s-mcq','s-mcq-result','s-write','s-done'];
 const LABELS  = ['Consent','Job Posting','Rules','Quiz','Result','Write','Done'];
+let lockActive = false; // true once quiz starts — no going back, lock overlay on tab switch
 
 function goTo(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
@@ -606,10 +640,41 @@ function goTo(id) {
   document.getElementById('step-label').textContent =
     id === 's-done' ? 'Complete' :
     `Step ${Math.max(1,dispIdx+1)} of ${displaySteps.length - 1} — ${LABELS[idx] || ''}`;
-
   if (id === 's-mcq') buildMCQ();
   if (id === 's-write' && !startTime) { startTime = Date.now(); startTimer(); logEvent('TASK_START'); }
 }
+
+// Called when participant clicks "Take the Quiz" — activates lock mode
+function startQuizLocked() {
+  lockActive = true;
+  // Request fullscreen
+  const el = document.documentElement;
+  if (el.requestFullscreen) el.requestFullscreen().catch(()=>{});
+  else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+  goTo('s-mcq');
+}
+
+function returnToTask() {
+  document.getElementById('lock-overlay').classList.remove('visible');
+  // Try re-entering fullscreen
+  const el = document.documentElement;
+  if (el.requestFullscreen) el.requestFullscreen().catch(()=>{});
+  else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+}
+
+// Exit fullscreen listener — show lock overlay if they escape
+document.addEventListener('fullscreenchange', () => {
+  if (lockActive && !document.fullscreenElement) {
+    document.getElementById('lock-overlay').classList.add('visible');
+    logEvent('FULLSCREEN_EXIT');
+  }
+});
+document.addEventListener('webkitfullscreenchange', () => {
+  if (lockActive && !document.webkitFullscreenElement) {
+    document.getElementById('lock-overlay').classList.add('visible');
+    logEvent('FULLSCREEN_EXIT');
+  }
+});
 
 // ── Timer ─────────────────────────────────────────────────────────────────────
 let startTime = null, elapsed = 0, timerReady = false, timerInt = null;
@@ -669,11 +734,21 @@ document.addEventListener('visibilitychange', () => {
   if (document.hidden) {
     focusSwitches++;
     logEvent('FOCUS_LOST',{count:focusSwitches});
-    document.getElementById('focus-count').textContent=' ('+focusSwitches+'x)';
+    if (lockActive) {
+      document.getElementById('lock-overlay').classList.add('visible');
+    }
+    if (document.getElementById('focus-count')) {
+      document.getElementById('focus-count').textContent=' ('+focusSwitches+'x)';
+    }
     show('focus-warn');
     const l=document.getElementById('tab-label');
-    l.textContent='⚠ '+focusSwitches+' tab switches'; l.className='stat warn';
-  } else { setTimeout(()=>hide('focus-warn'),5000); }
+    if(l){ l.textContent='⚠ '+focusSwitches+' tab switches'; l.className='stat warn'; }
+  } else {
+    if (lockActive) {
+      document.getElementById('lock-overlay').classList.remove('visible');
+    }
+    setTimeout(()=>hide('focus-warn'),5000);
+  }
 });
 textarea.addEventListener('input', () => {
   const now=Date.now(), cur=textarea.value.length, delta=cur-lastLen, dt=(now-lastCheck)/1000;
@@ -698,6 +773,10 @@ async function submitResponse() {
   };
   try{ await fetch(SHEETS_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)}); }
   catch(e){ console.warn(e); }
+  // Release fullscreen lock on completion
+  lockActive = false;
+  if (document.exitFullscreen) document.exitFullscreen().catch(()=>{});
+  else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
   goTo('s-done');
 }
 
